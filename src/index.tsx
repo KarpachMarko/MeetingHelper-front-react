@@ -2,35 +2,26 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import "./index.css"
+import {Meetings} from "./components/Meetings";
 import {RequirementOption} from "./components/RequirementOption";
-import {Card} from "./components/Card";
-import {MeetingCard} from "./components/MeetingCard";
-import {Card2} from "./components/Card2";
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
 );
 root.render(
 	<React.StrictMode>
-		<div>
+
+		<Meetings />
+
+		<div className="overflow-auto">
 			<App />
 		</div>
 
-		{/*<div style={{width: "30%", margin: "0 auto", display: "flex", justifyContent: "center"}}>*/}
-			{/*<RequirementOption/>*/}
-			{/*<Card2 />*/}
-		{/*</div>*/}
-
-		{/*<div className="flex flex-col h-screen w-full gap-6">*/}
-		{/*	<div className="flex flex-row flex-1 h-56 gap-3">*/}
-		{/*		<MeetingCard />*/}
-		{/*		<MeetingCard />*/}
-		{/*	</div>*/}
-		{/*	<div className="flex flex-row flex-1 h-56 gap-3">*/}
-		{/*		<MeetingCard />*/}
-		{/*		<MeetingCard />*/}
-		{/*		<MeetingCard />*/}
-		{/*	</div>*/}
-		{/*</div>*/}
+		<section className="flex flex-col justify-center antialiased bg-gray-50 text-gray-600 min-h-screen p-4">
+			<div className="flex" style={{width: "800px", margin: "0 auto", gap: 20}}>
+				<RequirementOption/>
+				<RequirementOption/>
+			</div>
+		</section>
 	</React.StrictMode>
 );

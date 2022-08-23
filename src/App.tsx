@@ -5,7 +5,7 @@ import {Card2} from "./components/Card2";
 function App() {
 	return (
 		<div>
-			<ArcherContainer style={{width: "max-content", display: "flex"}} strokeColor="black" className="h-full">
+			<ArcherContainer style={{width: "max-content", display: "flex"}} strokeColor="#818CF8" className="h-full">
 
 				<div className="flex justify-center items-center h-full gap-20 m-5">
 					<div className="flex-1 h-full items-center justify-center flex flex-col">

@@ -142,9 +142,6 @@ export const MeetingCard = () => {
 						</div>
 
 						<div className="relative pt-[6.25rem] pb-14 drop-shadow-2xl">
-							<div className="text-xs font-bold uppercase text-gray-200 tracking-widest mb-2">
-								Decide until: 24.08 16:30
-							</div>
 							<h3 className="text-2xl font-extrabold text-indigo-50 leading-snug mb-2">
 								Title
 							</h3>
@@ -173,6 +170,9 @@ export const MeetingCard = () => {
 						</div>
 
 						<div className="relative text-right space-x-2">
+							<div className="text-xs font-bold uppercase text-gray-200 tracking-widest mb-2">
+								Decide until: 24.08 16:30
+							</div>
 							<a className="font-medium text-md inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 text-gray-50 hover:underline focus:outline-none focus-visible:ring-2"
 							   href="#0">Not sure</a>
 							<a className="font-semibold text-md inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"

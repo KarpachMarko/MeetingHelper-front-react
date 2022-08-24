@@ -41,7 +41,7 @@ export const Card2 = () => {
 							</a>
 
 							<div
-								className="w-48 text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+								className="w-full text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
 								<button type="button"
 										className="inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 bg-indigo-100 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
 									<svg aria-hidden="true" className="mr-2 w-4 h-4 fill-current"

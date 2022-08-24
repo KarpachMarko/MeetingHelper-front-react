@@ -2,7 +2,7 @@ import React from "react";
 
 export const RequirementOption = () => {
 	return (
-		<a href="" className="block p-4 rounded-lg shadow-sm shadow-indigo-100">
+		<div className="block my-4 p-4 rounded-lg bg-white shadow-lg max-w-xs">
 			<img
 				alt="123 Wallaby Avenue, Park Road"
 				src="https://images.unsplash.com/photo-1554995207-c18c203602cb"
@@ -34,7 +34,7 @@ export const RequirementOption = () => {
 					</div>
 				</dl>
 
-				<dl className="flex items-center mt-6 space-x-8 text-xs">
+				<dl className="flex flex-wrap gap-6 mt-6 text-xs">
 					<div className="sm:inline-flex sm:items-center sm:shrink-0">
 						<svg className="w-4 h-4 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
@@ -83,14 +83,12 @@ export const RequirementOption = () => {
 						</div>
 					</div>
 
-					<div className="flex flex-col items-center space-x-2">
-						<div className="flex justify-center space-x-2">
-							<a className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
-							   href="#0">Details</a>
-						</div>
+					<div className="flex justify-end w-full space-x-2">
+						<a className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
+						   href="#0">Details</a>
 					</div>
 				</dl>
 			</div>
-		</a>
+		</div>
 	)
 }

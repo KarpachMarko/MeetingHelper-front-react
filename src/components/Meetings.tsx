@@ -3,8 +3,9 @@ import {MeetingCard} from "./MeetingCard";
 
 export const Meetings = () => {
 	return (
-		<div>
+		<section className="flex justify-center antialiased text-gray-600 p-4 gap-10">
 			<MeetingCard />
-		</div>
+			<MeetingCard />
+		</section>
 	);
 }

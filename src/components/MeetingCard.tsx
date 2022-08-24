@@ -6,9 +6,8 @@ export const MeetingCard = () => {
 	const circumference = 40 * 2 * Math.PI;
 
 	return (
-		<section className="flex flex-col justify-center antialiased bg-gray-50 text-gray-600 min-h-screen p-4">
-			<div className="h-full">
 
+			<div className="h-full">
 				<div className="max-w-xs mx-auto">
 					<div className="relative bg-indigo-400 shadow-lg rounded-lg shadow-xl p-5 overflow-hidden">
 
@@ -183,6 +182,5 @@ export const MeetingCard = () => {
 					</div>
 				</div>
 			</div>
-		</section>
 	)
 }

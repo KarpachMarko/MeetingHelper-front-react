@@ -15,38 +15,36 @@ export const Requirement = () => {
 								<span className="px-4 py-2">45$</span>
 							</div>
 
-							<a href="#">
-								<div className="flex-grow">
-									<header className="mb-3 flex justify-between gap-5">
-										<h3 className="text-[22px] text-gray-900 font-extrabold leading-snug">Title</h3>
-									</header>
-									<div className="mb-8">
-										<p>Description</p>
-									</div>
+							<div className="flex-grow">
+								<header className="mb-3 flex justify-between gap-5">
+									<h3 className="text-[22px] text-gray-900 font-extrabold leading-snug">Title</h3>
+								</header>
+								<div className="mb-8">
+									<p>Description</p>
 								</div>
-							</a>
+							</div>
 
 							<div
 								className="w-full text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
 								<span className="font-light">Parameters:</span>
 								<button type="button"
 										className="inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 bg-indigo-100 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-									<img alt="Medium" src="/icons/medium.svg" className="mr-2 w-4 h-4 fill-current"/>
+									<img alt="Medium" src="/icons/Priorities/medium.svg" className="mr-2 w-4 h-4 fill-current"/>
 									Near city
 								</button>
 								<button type="button"
-										className="inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-									<img alt="Low" src="/icons/low.svg" className="mr-2 w-4 h-4 fill-current"/>
+										className="inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 bg-indigo-50 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+									<img alt="Low" src="/icons/Priorities/low.svg" className="mr-2 w-4 h-4 fill-current"/>
 									Cool
 								</button>
 								<button type="button"
 										className="inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 bg-indigo-100 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-									<img alt="Highest" src="/icons/highest.svg" className="mr-2 w-4 h-4 fill-current"/>
+									<img alt="Highest" src="/icons/Priorities/highest.svg" className="mr-2 w-4 h-4 fill-current"/>
 									Suites for 6 persons
 								</button>
 								<button type="button"
-										className="inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-									<img alt="High" src="/icons/high.svg" className="mr-2 w-4 h-4 fill-current"/>
+										className="inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 bg-indigo-50 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+									<img alt="High" src="/icons/Priorities/high.svg" className="mr-2 w-4 h-4 fill-current"/>
 									Has parking slot
 								</button>
 							</div>

@@ -12,14 +12,14 @@ const root = ReactDOM.createRoot(
 root.render(
 	<React.StrictMode>
 
-		<Meetings />
+		<Meetings/>
 
 		<div className="overflow-auto">
-			<App />
+			<App/>
 		</div>
 
 		<section className="flex flex-col justify-center antialiased text-gray-600 p-4">
-			<Requirement />
+			<Requirement/>
 			<div className="flex justify-center gap-6">
 				<RequirementOption/>
 				<RequirementOption/>

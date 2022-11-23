@@ -85,7 +85,7 @@ export const RequirementOption = () => {
 
 					<div className="flex justify-end w-full space-x-2">
 						<a className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
-						   href="#0">Details</a>
+						   href="#">Details</a>
 					</div>
 				</dl>
 			</div>

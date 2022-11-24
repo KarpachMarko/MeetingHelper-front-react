@@ -6,53 +6,60 @@ import {CardToCreate} from "./components/CardToCreate";
 function App() {
 	return (
 		<div>
-			<ArcherContainer style={{width: "max-content", display: "flex", margin: "0 auto"}} strokeColor="#818CF8" className="h-full">
+			<ArcherContainer strokeColor="#818CF8" className="h-full flex mx-auto w-max">
 
-				<div className="flex justify-center items-center h-full gap-20 m-5">
-					<div className="flex-1 h-full items-center justify-center flex flex-col">
-						<ArcherElement id="1" relations={[{targetId: "2", targetAnchor:"left", sourceAnchor:"right"},
-							{targetId: "4", sourceAnchor: "right", targetAnchor: "left"}]}>
+				<div
+					className="flex flex-col justify-center items-center h-full gap-20 m-5">
+					<div className="flex-1 h-full items-center justify-center flex flex-row">
+						<ArcherElement id="1"
+									   relations={[{targetId: "2", sourceAnchor: "bottom", targetAnchor: "top"},
+										   {targetId: "4", sourceAnchor: "bottom", targetAnchor: "top"}]}>
 							<div>
 								<Card2/>
 							</div>
 						</ArcherElement>
 					</div>
 
-					<div className="flex-1 h-full items-center justify-center flex flex-col gap-10">
-						<ArcherElement id="2" relations={[{targetId: "5", sourceAnchor: "right", targetAnchor: "left"}]}>
+					<div className="flex-1 h-full items-center justify-center flex flex-row gap-10">
+						<ArcherElement id="2"
+									   relations={[{targetId: "5", sourceAnchor: "bottom", targetAnchor: "top"}]}>
 							<div>
 								<Card2/>
 							</div>
 						</ArcherElement>
-						<ArcherElement id="4" relations={[{targetId: "6", sourceAnchor: "right", targetAnchor: "left"}]}>
-							<div>
-								<Card2/>
-							</div>
-						</ArcherElement>
-					</div>
-
-					<div className="flex-1 h-full items-center justify-center flex flex-col gap-10">
-						<ArcherElement id="5" relations={[{targetId: "3", sourceAnchor: "right", targetAnchor: "left"}]}>
-							<div>
-								<Card2/>
-							</div>
-						</ArcherElement>
-						<ArcherElement id="6" relations={[{targetId: "3", sourceAnchor: "right", targetAnchor: "left"}]}>
+						<ArcherElement id="4"
+									   relations={[{targetId: "6", sourceAnchor: "bottom", targetAnchor: "top"}]}>
 							<div>
 								<Card2/>
 							</div>
 						</ArcherElement>
 					</div>
 
-					<div className="flex-1 h-full items-center justify-center flex flex-col">
-						<ArcherElement id="3" relations={[{targetId: "7", sourceAnchor: "right", targetAnchor: "left"}]}>
+					<div className="flex-1 h-full items-center justify-center flex flex-row gap-10">
+						<ArcherElement id="5"
+									   relations={[{targetId: "3", sourceAnchor: "bottom", targetAnchor: "top"}]}>
+							<div>
+								<Card2/>
+							</div>
+						</ArcherElement>
+						<ArcherElement id="6"
+									   relations={[{targetId: "3", sourceAnchor: "bottom", targetAnchor: "top"}]}>
 							<div>
 								<Card2/>
 							</div>
 						</ArcherElement>
 					</div>
 
-					<div className="flex-1 h-full items-center justify-center flex flex-col">
+					<div className="flex-1 h-full items-center justify-center flex flex-row">
+						<ArcherElement id="3"
+									   relations={[{targetId: "7", sourceAnchor: "bottom", targetAnchor: "top"}]}>
+							<div>
+								<Card2/>
+							</div>
+						</ArcherElement>
+					</div>
+
+					<div className="flex-1 h-full items-center justify-center flex flex-row">
 						<ArcherElement id="7">
 							<div>
 								<CardToCreate/>

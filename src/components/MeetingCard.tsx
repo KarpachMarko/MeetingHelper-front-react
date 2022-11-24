@@ -7,9 +7,9 @@ export const MeetingCard = () => {
 	const circumference = 40 * 2 * Math.PI;
 
 	return (
-		<div className="h-full relative">
-			<Guests opened={false}/>
-			<div className="max-w-xs mx-auto">
+		<div className="h-fit w-screen relative">
+			<div className="w-3/4 mx-auto relative">
+				<Guests opened={false}/>
 				<div className="relative bg-indigo-400 shadow-lg rounded-lg shadow-xl p-5 overflow-hidden">
 
 
@@ -112,73 +112,72 @@ export const MeetingCard = () => {
 						</g>
 					</svg>
 					<div
-						className="absolute inline-flex items-center justify-center overflow-hidden rounded-full top-0 right-0">
-						<svg className="w-32 h-32" style={{transform: "rotate(-90deg)"}}>
+						className="absolute inline-flex items-center justify-center overflow-hidden rounded-full top-1 right-1 w-20">
+						<svg className="w-full aspect-square" style={{transform: "rotate(-90deg)"}}>
 							<circle
-								className="text-white"
+								className="text-white absolute"
 								strokeWidth="5"
 								stroke="transparent"
 								fill="currentColor"
 								fillOpacity={0.5}
-								r="50"
-								cx="64"
-								cy="64"
+								r="40"
+								cx="50%"
+								cy="50%"
 							/>
 							<circle
-								className="text-white"
+								className="text-white absolute"
 								strokeWidth="7"
 								strokeDasharray={circumference}
 								strokeDashoffset={circumference - percent / 100 * circumference}
 								strokeLinecap="round"
 								stroke="currentColor"
 								fill="transparent"
-								r="40"
-								cx="64"
-								cy="64"
+								r="30"
+								cx="50%"
+								cy="50%"
 							/>
 						</svg>
-						<span className="absolute font-bold text-2xl text-indigo-500">{percent}%</span>
+						<span className="absolute font-bold text-xl text-indigo-500">{percent}%</span>
 					</div>
-					<div className="absolute top-5 right-[5rem] bg-white rounded-full drop-shadow-xl">
+					<div className="absolute top-3 right-[4rem] bg-white rounded-full drop-shadow-xl">
 						<span
-							className="px-4 py-2 text-2xl text-indigo-500 font-bold">{300 * percent / 100}/300 $</span>
+							className="px-4 py-2 text-xl text-indigo-500 font-bold">{300 * percent / 100}/300 $</span>
 					</div>
 
-					<div className="relative pt-[6.25rem] pb-14 drop-shadow-2xl">
-						<h3 className="text-2xl font-extrabold text-indigo-50 leading-snug mb-2">
+					<div className="relative pt-[3.5rem] drop-shadow-2xl">
+						<h3 className="text-2xl tracking-wider font-extrabold text-indigo-50 leading-snug mb-2">
 							Title
 						</h3>
 						<p className="text-indigo-200">
-							Description Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias error excepturi
-							sint. Aliquam dolore ea eum facere nemo officiis sapiente!
+							Lorem ipsum dolor sit amet, consectetur adipisicing...
 						</p>
 
-						<div className="relative mt-5 h-24">
-							<h1 className="absolute font-bold -right-11 top-6 text-9xl text-indigo-300 opacity-20">
+						<div className="relative h-20">
+							<h1 className="absolute font-bold -right-11 top-0 text-8xl text-indigo-300 opacity-20">
 								2022
 							</h1>
 							<ArcherContainer style={{width: "100%", height: "100%"}} strokeColor="#FFF">
 								<ArcherElement id="1" relations={[{
 									targetId: "2",
-									sourceAnchor: "bottom",
+									sourceAnchor: "right",
 									targetAnchor: "left"
 								}]}>
-									<div className="absolute top-0 left-0 bg-indigo-100 rounded-full drop-shadow-2xl">
-										<span className="px-4 py-2 text-2xl text-indigo-500 font-bold">26.08</span>
+									<div className="absolute top-6 left-0 bg-indigo-100 rounded-full drop-shadow-2xl">
+										<span className="px-4 py-2 text-xl text-indigo-500 font-bold">26.08</span>
 									</div>
 								</ArcherElement>
 
 								<ArcherElement id="2">
 									<div
-										className="absolute bottom-0 right-8 bg-indigo-50 rounded-full drop-shadow-2xl">
-										<span className="px-4 py-2 text-2xl text-indigo-500 font-bold">30.08</span>
+										className="absolute top-0 right-0 bg-indigo-50 rounded-full drop-shadow-2xl">
+										<span className="px-4 py-2 text-xl text-indigo-500 font-bold">30.08</span>
 									</div>
 								</ArcherElement>
 							</ArcherContainer>
 						</div>
 					</div>
 
-					<div className="relative text-right space-x-2">
+					<div className="relative mt-2 text-right space-x-2">
 						<div className="text-xs font-bold uppercase text-gray-200 tracking-widest mb-2">
 							Decide until: 24.08 16:30
 						</div>

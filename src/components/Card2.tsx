@@ -1,7 +1,20 @@
-import React from "react";
+import { motion } from "framer-motion";
+import React, {useState} from "react";
 import {Guests} from "./Guests";
 
 export const Card2 = () => {
+	const containerVariants = {
+		opened: {height: "auto"},
+		closed: {height: "0"}
+	}
+
+	const btnVariants = {
+		opened: {scaleY: -1},
+		closed: {scaleY: 1}
+	}
+
+	const [isOpen, setIsOpen] = useState(false)
+
 	return (
 		<div className="h-full relative">
 			<Guests/>
@@ -29,8 +42,8 @@ export const Card2 = () => {
 						</figure>
 
 
-						<div className="flex-grow flex flex-col p-5">
-							<div className="flex-grow">
+						<div className="flex-grow flex items-center flex-col p-5">
+							<div className="w-full">
 								<header className="mb-3 flex justify-between gap-5">
 									<h3 className="text-[22px] text-gray-900 font-extrabold leading-snug">Title</h3>
 
@@ -44,8 +57,8 @@ export const Card2 = () => {
 								</div>
 							</div>
 
-							<div
-								className="w-full relative text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+							<motion.div animate={isOpen ? "opened" : "closed"} variants={containerVariants}
+								className="w-full h-0 relative text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white overflow-hidden">
 								<span className={"block"}>Requirements</span>
 								<button type="button"
 										className="inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 bg-indigo-100 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
@@ -67,19 +80,16 @@ export const Card2 = () => {
 									   href="#">Show all requirements</a>
 								</div>
 
-							</div>
+							</motion.div>
 
 							<hr className="mb-3"/>
 
-							<div className="flex flex-col items-center space-x-2">
-								<span className="font-light text-gray-500">Decide until:</span>
-								<span className="font-light mb-4">25.08 20:00</span>
-								<div className="flex justify-center space-x-2">
-									<a className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
-									   href="#">Decline</a>
-									<a className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-500 focus:outline-none focus-visible:ring-2 hover:bg-indigo-600 text-white"
-									   href="#">Join</a>
-								</div>
+							<div onClick={() => setIsOpen(isOpen => !isOpen)} className={"absolute cursor-pointer -bottom-2 w-1/3 h-6 rounded-full bg-indigo-100 shadow-md flex justify-center items-center text-indigo-500"}>
+								<motion.svg animate={isOpen ? "opened" : "closed"} variants={btnVariants} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+									 strokeWidth="1.5" stroke="currentColor" className="h-full aspect-square">
+									<path strokeLinecap="round" strokeLinejoin="round"
+										  d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+								</motion.svg>
 							</div>
 						</div>
 					</div>

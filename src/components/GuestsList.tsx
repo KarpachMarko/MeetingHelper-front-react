@@ -5,8 +5,8 @@ import {Guest} from "./Guest";
 
 export const GuestsList = (props: { opened: boolean }) => {
 	const containerVariants = {
-		opened: {zIndex: 20, x: "-105%", minWidth: "min-content", maxWidth: ""},
-		closed: {zIndex: 0, x: 0, minWidth: "", maxWidth: "100%"}
+		opened: {display: "block", opacity: [0, 0, 1], x: ["-105%", "-105%", "0%"], minWidth: "min-content", maxWidth: "", transition: {time: [0, 0.5, 0]}},
+		closed: {display: "none", opacity: [1, 0, 0], x: ["0%", "-105%", "-105%"], minWidth: "", maxWidth: "100%", transition: {time: [0, 0.5, 0]}}
 	}
 
 	const listVariants = {
@@ -25,7 +25,7 @@ export const GuestsList = (props: { opened: boolean }) => {
 
 	return (
 		<motion.div animate={props.opened ? "opened" : "closed"} variants={containerVariants}
-					className="absolute top-24 w-full bg-white shadow-2xl rounded-2xl p-2">
+					className="absolute top-24 w-full bg-white shadow-2xl rounded-2xl p-2 z-20">
 			<div className="relative ">
 				<InviteGuest/>
 

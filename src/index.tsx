@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import "./index.css"
-import {Meetings} from "./components/Meetings";
+import {Meetings} from "./views/Meetings";
 import {RequirementOption} from "./components/RequirementOption";
 import {Requirement} from "./components/Requirement";
 import {MeetingForm} from "./components/MeetingForm";
+import {Events} from "./views/Events";
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
@@ -13,7 +14,10 @@ const root = ReactDOM.createRoot(
 root.render(
 	<React.StrictMode>
 
-		<Meetings/>
+		{/*<Meetings />*/}
+		<Events />
+
+		{/*<Meetings/>
 
 		<div className={"flex justify-center my-8"}>
 			<MeetingForm />
@@ -29,6 +33,6 @@ root.render(
 				<RequirementOption/>
 				<RequirementOption/>
 			</div>
-		</section>
+		</section>*/}
 	</React.StrictMode>
 );

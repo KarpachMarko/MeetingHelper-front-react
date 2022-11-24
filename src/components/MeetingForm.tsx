@@ -11,19 +11,19 @@ export const MeetingForm = () => {
 					<label
 						className="block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
 					>
-						<span className="text-xs font-medium text-gray-700"> Title </span>
+						<span className="text-xs font-medium text-gray-500"> Title </span>
 
 						<input
 							type="text"
 							name="title"
 							placeholder="Trip to london"
-							className="mt-1 w-full border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+							className="mt-1 w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
 						/>
 					</label>
 
 					<textarea
 						name="description"
-						className="block w-full overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+						className="block text-gray-800 w-full overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
 						placeholder="Description"
 						rows={6}
 					/>
@@ -32,23 +32,23 @@ export const MeetingForm = () => {
 						<label
 							className="flex-1 block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
 						>
-							<span className="text-xs font-medium text-gray-700">Start date</span>
+							<span className="text-xs font-medium text-gray-500">Start date</span>
 
 							<input
 								type="date"
 								name="title"
-								className="mt-1 w-full border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+								className="mt-1 w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
 							/>
 						</label>
 						<label
 							className="flex-1 block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
 						>
-							<span className="text-xs font-medium text-gray-700">End date (optional)</span>
+							<span className="text-xs font-medium text-gray-500">End date (optional)</span>
 
 							<input
 								type="date"
 								name="title"
-								className="mt-1 w-full border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+								className="mt-1 w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
 							/>
 						</label>
 					</div>

@@ -4,7 +4,7 @@ import {Guests} from "./Guests";
 export const Card2 = () => {
 	return (
 		<div className="h-full relative">
-			<Guests />
+			<Guests/>
 			<div className="h-full relative">
 				<div className="max-w-xs mx-auto">
 					<div className="flex flex-col h-full bg-white shadow-lg rounded-lg overflow-hidden">
@@ -15,11 +15,14 @@ export const Card2 = () => {
 									src="https://res.cloudinary.com/dc6deairt/image/upload/v1638284256/course-img_tf0g8c.png"
 									width="320" height="180" alt="Course"/>
 
-								<div className="absolute bottom-0 w-full bg-gray-200 rounded-t-full h-1.5 dark:bg-gray-700">
-									<div className="bg-indigo-500 h-1.5 rounded-t-full dark:bg-blue-500" style={{width: "60%"}}></div>
+								<div
+									className="absolute bottom-0 w-full bg-gray-200 rounded-t-full h-1.5 dark:bg-gray-700">
+									<div className="bg-indigo-500 h-1.5 rounded-t-full dark:bg-blue-500"
+										 style={{width: "60%"}}></div>
 								</div>
 
-								<div className="absolute bottom-1 right-2 rounded-full bg-indigo-500 text-white font-bold shadow-md">
+								<div
+									className="absolute bottom-1 right-2 rounded-full bg-indigo-500 text-white font-bold shadow-md">
 									<span className="px-4 py-2">45$</span>
 								</div>
 							</a>
@@ -36,12 +39,14 @@ export const Card2 = () => {
 										<span>16:30 - 20:30</span>
 									</div>
 								</header>
-								<div className="mb-8">
+								<div className="pb-2 mb-2 border-b-2 border-indigo-100">
 									<p>Description</p>
 								</div>
 							</div>
 
-							<div className="w-full text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+							<div
+								className="w-full relative text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+								<span className={"block"}>Requirements</span>
 								<button type="button"
 										className="inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 bg-indigo-100 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
 									<svg aria-hidden="true" className="mr-2 w-4 h-4 fill-current" viewBox="0 0 128 128">
@@ -57,6 +62,11 @@ export const Card2 = () => {
 									</svg>
 									Meat
 								</button>
+								<div className={"flex justify-center my-1"}>
+									<a className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 transition duration-150 ease-in-out focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
+									   href="#">Show all requirements</a>
+								</div>
+
 							</div>
 
 							<hr className="mb-3"/>

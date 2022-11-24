@@ -55,6 +55,15 @@ export const Requirement = () => {
 								<span className="font-light text-gray-500">Find until:</span>
 								<span className="font-light">25.08 20:00</span>
 							</div>
+
+							<div className={"flex justify-center gap-2"}>
+								<a className="flex-4 font-semibold text-sm inline-flex items-center justify-center px-2 py-1.5 border border-transparent rounded leading-5 transition duration-150 ease-in-out focus:outline-none focus-visible:ring-2 hover:bg-red-100 text-red-500"
+								   href="#">Remove</a>
+								<a className="flex-4 font-semibold text-sm inline-flex items-center justify-center px-2 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-red-500 focus:outline-none focus-visible:ring-2 hover:bg-red-600 text-white"
+								   href="#">I Payed It</a>
+								<a className="flex-1 font-semibold text-sm inline-flex items-center justify-center px-2 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-500 focus:outline-none focus-visible:ring-2 hover:bg-indigo-600 text-white"
+								   href="#">Options</a>
+							</div>
 						</div>
 					</div>
 				</div>

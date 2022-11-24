@@ -1,6 +1,7 @@
 import React from 'react';
 import {ArcherContainer, ArcherElement} from "react-archer";
 import {Card2} from "./components/Card2";
+import {CardToCreate} from "./components/CardToCreate";
 
 function App() {
 	return (
@@ -54,7 +55,7 @@ function App() {
 					<div className="flex-1 h-full items-center justify-center flex flex-col">
 						<ArcherElement id="7">
 							<div>
-								<Card2/>
+								<CardToCreate/>
 							</div>
 						</ArcherElement>
 					</div>

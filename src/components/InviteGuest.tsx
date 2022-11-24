@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 
 export const InviteGuest = () => {
 	return (
-		<motion.div whileHover={{scale: 1.2}} className="absolute -top-10 right-5 w-12 aspect-square bg-indigo-400 shadow-lg text-white rounded-full flex items-center justify-center p-2">
+		<motion.div whileHover={{scale: 1.2}} className="absolute cursor-pointer -top-10 right-5 w-12 aspect-square bg-indigo-400 shadow-lg text-white rounded-full flex items-center justify-center p-2">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
 				 stroke="currentColor" className="w-full aspect-square">
 				<path strokeLinecap="round" strokeLinejoin="round"

@@ -5,6 +5,7 @@ import "./index.css"
 import {Meetings} from "./components/Meetings";
 import {RequirementOption} from "./components/RequirementOption";
 import {Requirement} from "./components/Requirement";
+import {MeetingForm} from "./components/MeetingForm";
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
@@ -13,6 +14,10 @@ root.render(
 	<React.StrictMode>
 
 		<Meetings/>
+
+		<div className={"flex justify-center my-8"}>
+			<MeetingForm />
+		</div>
 
 		<div className="overflow-auto">
 			<App/>

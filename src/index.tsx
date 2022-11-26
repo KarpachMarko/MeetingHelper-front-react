@@ -16,10 +16,12 @@ root.render(
 
 		{/*<Meetings />*/}
 		<Events />
+		{/*<div className={"flex justify-center items-center h-screen"}>*/}
+		{/*	<MeetingForm />*/}
+		{/*</div>*/}
 
-		{/*<Meetings/>
 
-		<div className={"flex justify-center my-8"}>
+		{/*<div className={"flex justify-center my-8"}>
 			<MeetingForm />
 		</div>
 

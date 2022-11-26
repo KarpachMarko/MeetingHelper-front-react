@@ -16,7 +16,7 @@ export const Card2 = () => {
 	const [isOpen, setIsOpen] = useState(false)
 
 	return (
-		<div className="h-full relative">
+		<div className="h-full relative my-4">
 			<Guests/>
 			<div className="h-full relative">
 				<div className="max-w-xs mx-auto">

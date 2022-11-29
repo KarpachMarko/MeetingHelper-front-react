@@ -2,7 +2,7 @@ import React from "react";
 
 export const MeetingForm = () => {
 	return (
-		<div className={"shadow-2xl bg-white rounded-lg w-8/12 p-4 mx-5 min-h-min flex flex-col items-center"}>
+		<div className={"shadow-2xl bg-white rounded-lg w-10/12 p-4 mx-5 min-h-min flex flex-col items-center"}>
 			<div className={"w-full"}>
 				<label htmlFor="price" className="block text-sm font-medium text-gray-700">
 					Meeting

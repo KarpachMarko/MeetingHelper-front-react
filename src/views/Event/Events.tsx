@@ -1,9 +1,9 @@
-import App from "../App";
+import TimeLine from "../../TimeLine";
 
 export const Events = () => {
 	return (
 		<div className={"w-screen h-screen overflow-y-scroll snap-y snap-mandatory"}>
-			<App />
+			<TimeLine />
 		</div>
 	)
 }

@@ -5,8 +5,8 @@ import {Guest} from "./Guest";
 
 export const GuestsList = (props: { opened: boolean }) => {
 	const containerVariants = {
-		opened: {display: "block", opacity: 1, x: "0%", minWidth: "min-content", maxWidth: ""},
-		closed: {display: "none", opacity: 0, x: "-105%", minWidth: "", maxWidth: "100%"}
+		opened: {display: "block", opacity: 1, x: "0%", minWidth: "min-content"},
+		closed: {display: "none", opacity: 0, x: "-105%", minWidth: ""}
 	}
 
 	const listVariants = {

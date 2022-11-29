@@ -1,10 +1,14 @@
 import React from "react";
 import {ArcherContainer, ArcherElement} from "react-archer";
 import { Guests } from "./Guests";
+import {IMeeting} from "../domain/entity/IMeeting";
 
-export const MeetingCard = () => {
+export const MeetingCard = (props: {meeting: IMeeting}) => {
 	const percent = 74;
-	const circumference = 40 * 2 * Math.PI;
+	const circumference = 30 * 2 * Math.PI;
+
+	const startDate = new Date(props.meeting.startDate)
+	const endDate = new Date(props.meeting.endDate)
 
 	return (
 		<div className="h-fit w-screen relative">
@@ -146,15 +150,15 @@ export const MeetingCard = () => {
 
 					<div className="relative pt-[3.5rem] drop-shadow-2xl">
 						<h3 className="text-2xl tracking-wider font-extrabold text-indigo-50 leading-snug mb-2">
-							Title
+							{props.meeting.title}
 						</h3>
 						<p className="text-indigo-200">
-							Lorem ipsum dolor sit amet, consectetur adipisicing...
+							{props.meeting.description}
 						</p>
 
 						<div className="relative h-20">
 							<h1 className="absolute font-bold -right-11 top-0 text-8xl text-indigo-300 opacity-20">
-								2022
+								{startDate.getFullYear()}
 							</h1>
 							<ArcherContainer style={{width: "100%", height: "100%"}} strokeColor="#FFF">
 								<ArcherElement id="1" relations={[{
@@ -163,14 +167,14 @@ export const MeetingCard = () => {
 									targetAnchor: "left"
 								}]}>
 									<div className="absolute top-6 left-0 bg-indigo-100 rounded-full drop-shadow-2xl">
-										<span className="px-4 py-2 text-xl text-indigo-500 font-bold">26.08</span>
+										<span className="px-4 py-2 text-xl text-indigo-500 font-bold">{`${startDate.getDate()}.${startDate.getMonth()}`}</span>
 									</div>
 								</ArcherElement>
 
 								<ArcherElement id="2">
 									<div
 										className="absolute top-0 right-0 bg-indigo-50 rounded-full drop-shadow-2xl">
-										<span className="px-4 py-2 text-xl text-indigo-500 font-bold">30.08</span>
+										<span className="px-4 py-2 text-xl text-indigo-500 font-bold">{`${endDate.getDate()}.${endDate.getMonth()}`}</span>
 									</div>
 								</ArcherElement>
 							</ArcherContainer>

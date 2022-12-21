@@ -2,8 +2,9 @@ import {motion} from "framer-motion";
 import React, {useState} from "react";
 import {InviteGuest} from "./InviteGuest";
 import {Guest} from "./Guest";
+import {IGuest} from "../domain/entity/IGuest";
 
-export const GuestsList = (props: { opened: boolean }) => {
+export const GuestsList = (props: {guests: IGuest[], opened: boolean }) => {
 	const containerVariants = {
 		opened: {display: "block", opacity: 1, x: "0%", minWidth: "min-content"},
 		closed: {display: "none", opacity: 0, x: "-105%", minWidth: ""}
@@ -13,13 +14,6 @@ export const GuestsList = (props: { opened: boolean }) => {
 		opened: {height: "fit-content"},
 		closed: {height: 100}
 	}
-
-	const guests = [
-		{name: "Marko", status: 2, role: 2},
-		{name: "Ilja", status: 1, role: 0},
-		{name: "Katja", status: 2, role: 1},
-		{name: "Sanja", status: 0, role: 0}
-	]
 
 	const [selected, setSelected] = useState(-1)
 
@@ -31,8 +25,8 @@ export const GuestsList = (props: { opened: boolean }) => {
 
 				<motion.div animate={props.opened ? "opened" : "closed"} variants={listVariants}
 							className="overflow-hidden">
-					{guests.map((guest, index) =>
-						<Guest key={index} guest={guest} index={index} len={guests.length} opened={index === selected}
+					{props.guests.map((guest, index) =>
+						<Guest key={index} guest={guest} index={index} len={props.guests.length} opened={index === selected}
 							   onClick={() => setSelected(selected => selected === index ? -1 : index)}/>
 					)}
 				</motion.div>

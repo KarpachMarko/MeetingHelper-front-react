@@ -17,7 +17,7 @@ export const Card2 = () => {
 
 	return (
 		<div className="h-full relative my-4">
-			<Guests/>
+			<Guests guests={[]}/>
 			<div className="h-full relative">
 				<div className="max-w-xs mx-auto">
 					<div className="flex flex-col h-full bg-white shadow-lg rounded-lg overflow-hidden">

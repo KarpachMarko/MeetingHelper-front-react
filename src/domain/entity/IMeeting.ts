@@ -1,4 +1,5 @@
 import {IEntityId} from "./IEntityId";
+import {IUser} from "./IUser";
 
 
 export interface IMeeting extends IEntityId {
@@ -7,6 +8,8 @@ export interface IMeeting extends IEntityId {
 	startDate: string
 	endDate: string
 	budgetPerPerson: number
+	spentBudget: number
+	users: IUser[]
 }
 
 export const meetingInitial: IMeeting = {
@@ -16,4 +19,6 @@ export const meetingInitial: IMeeting = {
 	startDate: "",
 	endDate: "",
 	budgetPerPerson: 0,
+	spentBudget: 0,
+	users: []
 }

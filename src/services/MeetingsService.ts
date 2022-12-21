@@ -4,7 +4,7 @@ import {IAppState} from "../state/IAppState";
 
 export class MeetingsService extends BaseService<IMeeting> {
 
-	constructor(appSate: IAppState) {
-		super("/meetings", appSate);
+	constructor(appState: IAppState) {
+		super("/meetings", appState);
 	}
 }

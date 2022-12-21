@@ -2,8 +2,7 @@ import {IAppState} from "./IAppState";
 import React from "react";
 
 export const initialState: IAppState = {
-	jwt: null,
-	setJwt: () => {},
+
 };
 
 export const AppContext = React.createContext<IAppState>(initialState);

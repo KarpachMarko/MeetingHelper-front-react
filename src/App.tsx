@@ -16,7 +16,7 @@ export const App = () => {
                         <p>{window.location.toString()}</p>
                     }/>
                     <Route path="/meetings" element={<Meetings/>}/>
-                    <Route path="/events" element={<Events/>}/>
+                    <Route path="/meetings/:meetingId/events" element={<Events/>}/>
                 </Routes>
             </AppContextProvider>
         </>

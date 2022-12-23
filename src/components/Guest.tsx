@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
-import {IGuest} from "../domain/entity/IGuest";
+import {IGuest} from "../domain/model/IGuest";
 
 export const Guest = (props: {guest: IGuest, index: number, len: number, opened: boolean, onClick: () => void}) => {
 	const iconColor = ["fill-red-400", "fill-amber-400", "fill-indigo-400"]

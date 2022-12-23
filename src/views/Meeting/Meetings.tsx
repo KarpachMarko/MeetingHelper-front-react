@@ -1,5 +1,5 @@
 import {MeetingCard} from "../../components/MeetingCard";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import {AppContext} from "../../state/AppContext";
 import {IMeeting} from "../../domain/entity/IMeeting";
 import {initialError} from "../../domain/model/IError";
@@ -10,11 +10,10 @@ export const Meetings = () => {
 
     const appState = useContext(AppContext);
 
-    const initialMeetings: IMeeting[] = []
-    const [meetings, setMeetings] = useState(initialMeetings)
+    const [meetings, setMeetings] = useState([] as IMeeting[])
     const [error, setError] = useState(initialError)
 
-    const meetingsService = new MeetingsService(appState);
+    const meetingsService = useMemo(() => new MeetingsService(appState), [appState]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,7 +24,7 @@ export const Meetings = () => {
             }
         }
         fetchData().catch(console.error);
-    }, [])
+    }, [meetingsService])
 
     if (error !== undefined) {
         return <Error error={error}/>

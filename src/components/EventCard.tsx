@@ -1,8 +1,9 @@
-import { motion } from "framer-motion";
+import {motion} from "framer-motion";
 import React, {useState} from "react";
 import {Guests} from "./Guests";
+import {IEvent} from "../domain/entity/IEvent";
 
-export const Card2 = () => {
+export const EventCard = (props: {event: IEvent}) => {
 	const containerVariants = {
 		opened: {height: "auto"},
 		closed: {height: "0"}
@@ -11,6 +12,16 @@ export const Card2 = () => {
 	const btnVariants = {
 		opened: {scaleY: -1},
 		closed: {scaleY: 1}
+	}
+
+	const formatDate = (dateStr: string) => {
+		const date = new Date(dateStr);
+		return `${date.getDate()}.${date.getMonth()}`
+	}
+
+	const formatTime = (dateStr: string) => {
+		const date = new Date(dateStr);
+		return `${date.getHours()}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()}`
 	}
 
 	const [isOpen, setIsOpen] = useState(false)
@@ -44,16 +55,16 @@ export const Card2 = () => {
 
 						<div className="flex-grow flex items-center flex-col p-5">
 							<div className="w-full">
-								<header className="mb-3 flex justify-between gap-5">
-									<h3 className="text-[22px] text-gray-900 font-extrabold leading-snug">Title</h3>
+								<header className="mb-3 flex justify-between gap-3">
+									<h3 className="text-[22px] text-gray-900 font-extrabold leading-snug">{props.event.title}</h3>
 
 									<div className="flex flex-col items-end text-xs">
-										<span className="w-fit">26.08</span>
-										<span>16:30 - 20:30</span>
+										<span className="w-fit">{formatDate(props.event.startDate)}</span>
+										<span>{formatTime(props.event.startDate)}-{formatTime(props.event.endDate)}</span>
 									</div>
 								</header>
 								<div className="pb-2 mb-2 border-b-2 border-indigo-100">
-									<p>Description</p>
+									<p>{props.event.description}</p>
 								</div>
 							</div>
 

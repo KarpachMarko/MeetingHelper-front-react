@@ -2,7 +2,7 @@ import {motion} from "framer-motion";
 import React, {useState} from "react";
 import {InviteGuest} from "./InviteGuest";
 import {Guest} from "./Guest";
-import {IGuest} from "../domain/entity/IGuest";
+import {IGuest} from "../domain/model/IGuest";
 
 export const GuestsList = (props: {guests: IGuest[], opened: boolean }) => {
 	const containerVariants = {

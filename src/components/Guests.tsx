@@ -1,7 +1,7 @@
 import {GuestsButton} from "./GuestsButton";
 import {GuestsList} from "./GuestsList";
 import {useState} from "react";
-import {IGuest} from "../domain/entity/IGuest";
+import {IGuest} from "../domain/model/IGuest";
 
 export const Guests = (props: {guests: IGuest[], opened?: boolean}) => {
 

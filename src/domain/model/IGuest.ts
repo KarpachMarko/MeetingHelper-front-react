@@ -1,4 +1,4 @@
-import {IUser} from "./IUser";
+import {IUser} from "../entity/IUser";
 
 export interface IGuest {
     user: IUser

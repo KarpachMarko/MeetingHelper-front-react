@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import {ArcherContainer, ArcherElement} from "react-archer";
 import {Guests} from "./Guests";
 import {IMeeting} from "../domain/entity/IMeeting";
-import {IGuest} from "../domain/entity/IGuest";
+import {IGuest} from "../domain/model/IGuest";
 import {MeetingUsersService} from "../services/MeetingUsersService";
 import {AppContext} from "../state/AppContext";
 import {UsersService} from "../services/UsersService";
@@ -11,14 +11,14 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
     const percent = 74;
     const circumference = 30 * 2 * Math.PI;
 
-    const roles: {[key: number]: string} = {1: "Creator", 2: "Manager", 3: "Guest"}
+    const roles: {[key: number]: string} = useMemo(() => {return {1: "Creator", 2: "Manager", 3: "Guest"}}, []);
 
-    const startDate = new Date(props.meeting.startDate)
-    const endDate = new Date(props.meeting.endDate)
+    const startDate = new Date(props.meeting.startDate);
+    const endDate = new Date(props.meeting.endDate);
 
     const appState = useContext(AppContext);
-    const meetingUsersService = new MeetingUsersService(appState)
-    const usersService = new UsersService(appState);
+    const meetingUsersService = useMemo(() => new MeetingUsersService(appState), [appState]);
+    const usersService = useMemo(() => new UsersService(appState), [appState]);
 
     const [guests, setGuests] = useState([] as IGuest[])
 
@@ -38,7 +38,7 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
         }
         fetchData().catch(console.error);
 
-    }, [])
+    }, [meetingUsersService, props.meeting.id, roles, usersService])
 
     return (
         <div className="h-fit w-screen relative">

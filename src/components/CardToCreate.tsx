@@ -1,9 +1,13 @@
 import React from "react";
 
-export const CardToCreate = () => {
+export const CardToCreate = ({onClick}: {onClick?: () => void}) => {
+
+	const doNothing = () => {}
+	const clickFunc = onClick ?? doNothing
+
 	return (
-		<div
-			className="h-60 w-52 rounded-2xl flex justify-center items-center border-4 border-gray-200 border-dashed text-gray-200 p-5 cursor-pointer"
+		<div onClick={clickFunc}
+			className={`h-60 w-52 rounded-2xl flex justify-center items-center border-4 border-gray-200 border-dashed text-gray-200 p-5 ${onClick ? 'cursor-pointer' : ''}`}
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
 				 stroke="currentColor" className="w-full aspect-square">

@@ -23,7 +23,7 @@ export class EventsService extends BaseService<IEvent> {
     }
 
     private async buildEventSequence(rootSequence: EventSequence): Promise<EventSequence> {
-        const nextEvents = (await this.getNextMeetingEvents(rootSequence.event.id)).data ?? [];
+        const nextEvents = (await this.getNextMeetingEvents(rootSequence.event.id!)).data ?? [];
         for (const nextEvent of nextEvents) {
             const sequence = await this.buildEventSequence(new EventSequence(nextEvent));
             rootSequence.addNext(sequence);

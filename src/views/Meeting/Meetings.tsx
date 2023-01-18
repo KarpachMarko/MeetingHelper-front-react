@@ -5,10 +5,13 @@ import {IMeeting} from "../../domain/entity/IMeeting";
 import {initialError} from "../../domain/model/IError";
 import {MeetingsService} from "../../services/MeetingsService";
 import {Error} from "../../components/Error";
+import {CardToCreate} from "../../components/CardToCreate";
+import {useNavigate} from "react-router-dom";
 
 export const Meetings = () => {
 
     const appState = useContext(AppContext);
+    const navigate = useNavigate();
 
     const [meetings, setMeetings] = useState([] as IMeeting[])
     const [error, setError] = useState(initialError)
@@ -28,17 +31,14 @@ export const Meetings = () => {
 
     if (error !== undefined) {
         return <Error error={error}/>
-    } else if (meetings.length > 0) {
+    } else {
         return (
-            <div className={"h-screen flex items-center flex-col gap-5 overflow-x-hidden"}>
+            <div className={"h-screen flex items-center flex-col mt-3 gap-5 overflow-x-hidden"}>
                 {meetings.map(meeting => {
                     return <MeetingCard key={meeting.id} meeting={meeting}/>
                 })}
+                <CardToCreate onClick={() => navigate("/meetings/new")} />
             </div>
-        )
-    } else {
-        return (
-            <p>There is no meetings</p>
         )
     }
 }

@@ -61,7 +61,7 @@ export const Events = () => {
                                                         .map((timelineEvent, timelineEventIndex) => {
                                                             return (
                                                                 <ArcherElement key={timelineEventIndex}
-                                                                               id={timelineEvent.event.id}
+                                                                               id={timelineEvent.event.id!}
                                                                                relations={timelineEvent.nextEventId.map(nextEventId => {
                                                                                    return (
                                                                                        {

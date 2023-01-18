@@ -11,10 +11,12 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
     const percent = 74;
     const circumference = 30 * 2 * Math.PI;
 
-    const roles: {[key: number]: string} = useMemo(() => {return {1: "Creator", 2: "Manager", 3: "Guest"}}, []);
+    const roles: { [key: number]: string } = useMemo(() => {
+        return {1: "Creator", 2: "Manager", 3: "Guest"}
+    }, []);
 
     const startDate = new Date(props.meeting.startDate);
-    const endDate = new Date(props.meeting.endDate);
+    const endDate = props.meeting.endDate ? new Date(props.meeting.endDate) : undefined;
 
     const appState = useContext(AppContext);
     const meetingUsersService = useMemo(() => new MeetingUsersService(appState), [appState]);
@@ -24,7 +26,7 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await meetingUsersService.getMeetingUsersInMeeting(props.meeting.id);
+            const response = await meetingUsersService.getMeetingUsersInMeeting(props.meeting.id!);
             if (response.status < 300 && response.data !== undefined) {
                 const result: IGuest[] = [];
                 for (const meetingUser of response.data) {
@@ -39,6 +41,16 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
         fetchData().catch(console.error);
 
     }, [meetingUsersService, props.meeting.id, roles, usersService])
+
+    function cardYearPreview() {
+        if (endDate) {
+            if (startDate.getFullYear() === endDate.getFullYear()) {
+                return startDate.getFullYear()
+            }
+            return `${startDate.getFullYear()}/${endDate.getFullYear().toString().substring(2)}`
+        }
+        return startDate.getFullYear()
+    }
 
     return (
         <div className="h-fit w-screen relative">
@@ -190,7 +202,7 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
 
                         <div className="relative h-20">
                             <h1 className="absolute font-bold -right-11 top-0 text-8xl text-indigo-300 opacity-20">
-                                {startDate.getFullYear() === endDate.getFullYear() ? startDate.getFullYear() : `${startDate.getFullYear()}/${endDate.getFullYear().toString().substring(2)}`}
+                                {cardYearPreview()}
                             </h1>
                             <ArcherContainer style={{width: "100%", height: "100%"}} strokeColor="#FFF">
                                 <ArcherElement id="1" relations={[{
@@ -204,27 +216,17 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
                                     </div>
                                 </ArcherElement>
 
-                                <ArcherElement id="2">
-                                    <div
-                                        className="absolute top-0 right-0 bg-indigo-50 rounded-full drop-shadow-2xl">
+                                {endDate ?
+                                    <ArcherElement id="2">
+                                        <div
+                                            className="absolute top-0 right-0 bg-indigo-50 rounded-full drop-shadow-2xl">
                                         <span
                                             className="px-4 py-2 text-xl text-indigo-500 font-bold">{`${endDate.getDate()}.${endDate.getMonth() + 1}`}</span>
-                                    </div>
-                                </ArcherElement>
+                                        </div>
+                                    </ArcherElement>
+                                    : <></>}
                             </ArcherContainer>
                         </div>
-                    </div>
-
-                    <div className="relative mt-2 text-right space-x-2">
-                        <div className="text-xs font-bold uppercase text-gray-200 tracking-widest mb-2">
-                            Decide until: 24.08 16:30
-                        </div>
-                        <a className="font-medium text-md inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 text-gray-50 focus:outline-none focus-visible:ring-2"
-                           href="#">Not sure</a>
-                        <a className="font-semibold text-md inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
-                           href="#">Decline</a>
-                        <a className="font-semibold text-md inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-500 focus:outline-none focus-visible:ring-2 hover:bg-indigo-600 text-white"
-                           href="#">Join</a>
                     </div>
                 </div>
             </div>

@@ -65,9 +65,9 @@ export class EventsTimeline {
             const filteredTimelineRow: ITimelineRow = {events: []};
             for (let j = timelineRow.events.length - 1; j >= 0; j--) {
                 const event = timelineRow.events[j];
-                if (!existingEventsId.includes(event.event.id)) {
+                if (!existingEventsId.includes(event.event.id!)) {
                     filteredTimelineRow.events.unshift(event);
-                    existingEventsId.push(event.event.id);
+                    existingEventsId.push(event.event.id!);
                 }
             }
             filteredTimelineRows.unshift(filteredTimelineRow);
@@ -86,7 +86,7 @@ export class EventsTimeline {
                 timelineRow.events.push({
                     columnPriority: this.getColumnPriority(eventSequence),
                     event: eventSequence.event,
-                    nextEventId: eventSequence.getNext().map(value => value.event.id)
+                    nextEventId: eventSequence.getNext().map(value => value.event.id!)
                 });
                 nextEvents.push(...eventSequence.getNext());
             }
@@ -99,7 +99,7 @@ export class EventsTimeline {
     }
 
     private getColumnPriority(eventSequence: EventSequence): number {
-        const rootId = eventSequence.getRotEvent().id;
+        const rootId = eventSequence.getRotEvent().id!;
         if (!this._columnPriorities.has(rootId)) {
             this._columnPriorities.set(rootId, this._columnPriorityIndex);
             this._columnPriorityIndex++;

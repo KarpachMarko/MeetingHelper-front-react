@@ -6,6 +6,9 @@ import {IGuest} from "../domain/model/IGuest";
 import {MeetingUsersService} from "../services/MeetingUsersService";
 import {AppContext} from "../state/AppContext";
 import {UsersService} from "../services/UsersService";
+import {EditMenu} from "./EditMenu";
+import {useNavigate} from "react-router-dom";
+import {MeetingsService} from "../services/MeetingsService";
 
 export const MeetingCard = (props: { meeting: IMeeting }) => {
     const percent = 74;
@@ -19,10 +22,12 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
     const endDate = props.meeting.endDate ? new Date(props.meeting.endDate) : undefined;
 
     const appState = useContext(AppContext);
+    const meetingsService = useMemo(() => new MeetingsService(appState), [appState]);
     const meetingUsersService = useMemo(() => new MeetingUsersService(appState), [appState]);
     const usersService = useMemo(() => new UsersService(appState), [appState]);
 
     const [guests, setGuests] = useState([] as IGuest[])
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -50,6 +55,11 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
             return `${startDate.getFullYear()}/${endDate.getFullYear().toString().substring(2)}`
         }
         return startDate.getFullYear()
+    }
+
+    async function deleteMeeting(id: string) {
+        await meetingsService.delete(id)
+        navigate(0)
     }
 
     return (
@@ -201,7 +211,7 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
                         </p>
 
                         <div className="relative h-20">
-                            <h1 className="absolute font-bold -right-11 top-0 text-8xl text-indigo-300 opacity-20">
+                            <h1 className="absolute font-bold -right-11 top-0 text-7xl text-indigo-300 opacity-20">
                                 {cardYearPreview()}
                             </h1>
                             <ArcherContainer style={{width: "100%", height: "100%"}} strokeColor="#FFF">
@@ -228,7 +238,12 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
                             </ArcherContainer>
                         </div>
                     </div>
+
                 </div>
+                    <EditMenu items={[
+                        {icon: "edit", action: () => {navigate(`/meetings/${props.meeting.id}`)}},
+                        {icon: "delete", action: async () => {await deleteMeeting(props.meeting.id!)}}
+                    ]} />
             </div>
         </div>
     )

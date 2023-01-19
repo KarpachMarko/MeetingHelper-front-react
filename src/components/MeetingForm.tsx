@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import moment from "moment";
 import {motion} from "framer-motion";
 import {ConfirmDialog} from "./ConfirmDialog";
@@ -7,7 +7,7 @@ import {MeetingsService} from "../services/MeetingsService";
 import {AppContext} from "../state/AppContext";
 import {useNavigate} from "react-router-dom";
 
-export const MeetingForm = () => {
+export const MeetingForm = (props: { meeting?: IMeeting }) => {
 
     interface IForm {
         title: string
@@ -18,16 +18,21 @@ export const MeetingForm = () => {
     }
 
     const formInit: IForm = {
-        title: "",
-        description: "",
-        startDate: moment().format("YYYY-MM-DD"),
-        endDate: undefined,
-        budgetPerPerson: 0
+        title: props.meeting?.title ?? "",
+        description: props.meeting?.description ?? "",
+        startDate: (props.meeting?.startDate ? moment(props.meeting?.startDate) : moment()).format("YYYY-MM-DD"),
+        endDate: props.meeting?.endDate ? moment(props.meeting?.endDate).format("YYYY-MM-DD") : undefined,
+        budgetPerPerson: props.meeting?.budgetPerPerson ?? 0
     }
 
     const [form, setForm] = useState(formInit);
     const [cancel, setCancel] = useState(false);
-    const [useBudget, setUseBudget] = useState(false);
+    const [useBudget, setUseBudget] = useState(!!props.meeting?.budgetPerPerson);
+
+    useEffect(() => {
+        setForm(formInit)
+        setUseBudget(!!props.meeting?.budgetPerPerson)
+    }, [props])
 
     const fieldVariants = {
         opened: {scale: 1, opacity: 1},
@@ -43,10 +48,18 @@ export const MeetingForm = () => {
         if (!useBudget) {
             meeting.budgetPerPerson = undefined
         }
+        if (props.meeting?.id) {
+            meeting.id = props.meeting?.id
+            meetingsService.edit(meeting).then(() => {
+                navigate("/meetings")
+            })
+        } else {
+            meetingsService.add(meeting).then(() => {
+                navigate("/meetings")
+            })
+        }
 
-        meetingsService.add(meeting).then(() => {
-            navigate("/meetings")
-        })
+
     }
 
     return (
@@ -129,6 +142,7 @@ export const MeetingForm = () => {
                                 step={1}
                                 value={form.budgetPerPerson}
                                 onChange={event => setForm({...form, budgetPerPerson: +event.target.value})}
+                                disabled={!useBudget}
                                 name="budgetPerPerson"
                                 className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
                             />
@@ -136,10 +150,14 @@ export const MeetingForm = () => {
                     </div>
                 </div>
                 <div className={"flex justify-end gap-2"}>
-                    <div className="font-semibold text-md inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
-                       onClick={() => setCancel(true)}>Cancel</div>
-                    <div className="font-semibold text-lg inline-flex items-center justify-center px-6 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-500 focus:outline-none focus-visible:ring-2 hover:bg-indigo-600 text-white"
-                       onClick={() => sendForm()}>Submit</div>
+                    <div
+                        className="font-semibold text-md inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
+                        onClick={() => setCancel(true)}>Cancel
+                    </div>
+                    <div
+                        className="font-semibold text-lg inline-flex items-center justify-center px-6 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-500 focus:outline-none focus-visible:ring-2 hover:bg-indigo-600 text-white"
+                        onClick={() => sendForm()}>Submit
+                    </div>
                 </div>
             </div>
 

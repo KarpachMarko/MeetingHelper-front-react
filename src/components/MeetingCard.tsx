@@ -9,6 +9,7 @@ import {UsersService} from "../services/UsersService";
 import {EditMenu} from "./EditMenu";
 import {useNavigate} from "react-router-dom";
 import {MeetingsService} from "../services/MeetingsService";
+import {ConfirmDialog} from "./ConfirmDialog";
 
 export const MeetingCard = (props: { meeting: IMeeting }) => {
     const percent = 74;
@@ -27,6 +28,7 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
     const usersService = useMemo(() => new UsersService(appState), [appState]);
 
     const [guests, setGuests] = useState([] as IGuest[])
+    const [deleteDialog, setDeleteDialog] = useState(false);
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -240,10 +242,26 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
                     </div>
 
                 </div>
-                    <EditMenu items={[
-                        {icon: "edit", action: () => {navigate(`/meetings/${props.meeting.id}`)}},
-                        {icon: "delete", action: async () => {await deleteMeeting(props.meeting.id!)}}
-                    ]} />
+                <EditMenu items={[
+                    {
+                        icon: "edit", action: () => {
+                            navigate(`/meetings/${props.meeting.id}`)
+                        }
+                    },
+                    {
+                        icon: "delete", action: () => {
+                            setDeleteDialog(true)
+                        }
+                    }
+                ]}/>
+                {deleteDialog ?
+                    <ConfirmDialog title={"Delete meeting"}
+                                   text={"Do you really want to delete this meeting?"}
+                                   acceptText={"Delete"}
+                                   cancelText={"Cancel"}
+                                   acceptAction={async () => await deleteMeeting(props.meeting.id!)}
+                                   cancelAction={() => setDeleteDialog(false)}/>
+                    : <></>}
             </div>
         </div>
     )

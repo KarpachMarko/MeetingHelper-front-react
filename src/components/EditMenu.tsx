@@ -70,7 +70,7 @@ export const EditMenu = (props: { items: EditMenuItem[] }) => {
         <>
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className={"absolute bottom-2 right-2 flex justify-center items-center h-8 aspect-square bg-white drop-shadow-lg rounded-full p-1 z-50"}>
+                className={"absolute bottom-2 right-2 flex justify-center items-center h-8 aspect-square bg-white drop-shadow-lg rounded-full p-1 z-50 cursor-pointer"}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                      stroke="currentColor" className="w-full h-full text-indigo-500">
                     <path strokeLinecap="round" strokeLinejoin="round"
@@ -88,7 +88,7 @@ export const EditMenu = (props: { items: EditMenuItem[] }) => {
                             onClick={() => isOpen ? item.action() : null}
                             animate={isOpen ? "opened" : "closed"}
                             variants={getVariant(index + 1)}
-                            className={"absolute bg-white drop-shadow-md aspect-square h-7 rounded-full p-1"}>
+                            className={"absolute bg-white drop-shadow-md aspect-square h-7 rounded-full p-1 cursor-pointer"}>
                             {getIcon(item.icon)}
                         </motion.div>
                     )

@@ -70,7 +70,7 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
                 <Guests
                     guests={guests}
                     opened={false}/>
-                <div className="relative bg-indigo-400 shadow-lg rounded-lg shadow-xl p-5 overflow-hidden">
+                <div className="relative bg-indigo-400 shadow-lg rounded-lg shadow-xl p-5 overflow-hidden" onClick={() => navigate(`${props.meeting.id}/events`)}>
 
 
                     <svg className="absolute top-0 right-0" width="158" height="119" aria-hidden="true">

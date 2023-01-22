@@ -5,6 +5,7 @@ import {Meetings} from "./views/Meeting/Meetings";
 import {Events} from "./views/Event/Events";
 import {CreateMeeting} from "./views/Meeting/CreateMeeting";
 import {EditMeeting} from "./views/Meeting/EditMeeting";
+import {CreateEvent} from "./views/Event/CreateEvent";
 
 export const App = () => {
 
@@ -14,6 +15,9 @@ export const App = () => {
         <>
             <AppContextProvider value={appState}>
                 <Routes>
+
+                    {/*<Route path={window.location.pathname} element={} />*/}
+
                     <Route path="/" element={
                         <p>{window.location.toString()}</p>
                     }/>
@@ -21,6 +25,7 @@ export const App = () => {
                     <Route path="/meetings/new" element={<CreateMeeting/>}/>
                     <Route path="/meetings/:meetingId" element={<EditMeeting/>}/>
                     <Route path="/meetings/:meetingId/events" element={<Events/>}/>
+                    <Route path="/meetings/:meetingId/events/new" element={<CreateEvent/>}/>
                 </Routes>
             </AppContextProvider>
         </>

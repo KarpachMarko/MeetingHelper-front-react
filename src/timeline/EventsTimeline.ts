@@ -33,7 +33,7 @@ export class EventsTimeline {
         const eventSequences = new List(this._eventSequences);
         let hour = new Date(this.eventsStartDate);
         let i = 0;
-        while (!eventSequences.isEmpty() && i < 10) {
+        while (!eventSequences.isEmpty() && i < 500) {
             const timelineHour = this.getTimelineHour(hour, eventSequences);
             if (timelineHour !== undefined) {
                 timelineHours.push(timelineHour);

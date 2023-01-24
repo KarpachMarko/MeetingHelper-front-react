@@ -70,7 +70,7 @@ export const EditMenu = (props: { items: EditMenuItem[] }) => {
         <>
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className={"absolute bottom-2 right-2 flex justify-center items-center h-8 aspect-square bg-white drop-shadow-lg rounded-full p-1 z-50 cursor-pointer"}>
+                className={"absolute bottom-2 right-2 flex justify-center items-center h-8 aspect-square bg-white drop-shadow-lg rounded-full p-1 z-40 cursor-pointer"}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                      stroke="currentColor" className="w-full h-full text-indigo-500">
                     <path strokeLinecap="round" strokeLinejoin="round"
@@ -79,7 +79,7 @@ export const EditMenu = (props: { items: EditMenuItem[] }) => {
                 </svg>
             </div>
 
-            <div className={"absolute bottom-2 right-2 w-8 h-8 flex flex-col justify-center items-center z-40"}>
+            <div className={"absolute bottom-2 right-2 w-8 h-8 flex flex-col justify-center items-center z-30"}>
 
                 {props.items.map((item, index) => {
                     return (

@@ -1,9 +1,20 @@
 import {motion} from "framer-motion";
-import React, {useState} from "react";
+import React, {useContext, useMemo, useState} from "react";
 import {Guests} from "./Guests";
 import {IEvent} from "../domain/entity/IEvent";
+import {EditMenu} from "./EditMenu";
+import {ConfirmDialog} from "./ConfirmDialog";
+import {useNavigate} from "react-router-dom";
+import {EventsService} from "../services/EventsService";
+import {AppContext} from "../state/AppContext";
 
-export const EventCard = (props: { event: IEvent, preview?: boolean, onClick?: () => void }) => {
+export const EventCard = (props: {
+    event: IEvent,
+    selected?: boolean,
+    preview?: boolean,
+    inactive?: boolean,
+    onClick?: () => void
+}) => {
     const containerVariants = {
         opened: {height: "auto"},
         closed: {height: "0"}
@@ -28,14 +39,26 @@ export const EventCard = (props: { event: IEvent, preview?: boolean, onClick?: (
         return `${date.getHours()}:${date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()}`
     }
 
-    const [isOpen, setIsOpen] = useState(false)
+    const navigate = useNavigate();
+    const appState = useContext(AppContext);
+    const eventsService = useMemo(() => new EventsService(appState), [appState]);
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [deleteDialog, setDeleteDialog] = useState(false);
+
+    function deleteEvent(eventId: string): void {
+        eventsService.delete(eventId).then(() =>
+            navigate(0)
+        )
+    }
 
     return (
-        <div className="h-full relative my-4">
+        <div className="h-full relative my-4" onClick={props.inactive ? doNothing : clickFunc}>
             {props.preview ? <></> : <Guests guests={[]}/>}
-            <div className="h-full relative" onClick={clickFunc}>
+            <div className="h-full relative">
                 <div className="max-w-xs mx-auto">
-                    <div className="flex flex-col h-full bg-white shadow-lg rounded-lg overflow-hidden">
+                    <div
+                        className={`flex flex-col h-full ${props.inactive ? 'bg-gray-600' : 'bg-white'} box-border shadow-lg rounded-lg overflow-hidden ${props.selected ? 'shadow-indigo-400' : ''}`}>
                         {props.preview ? <></> :
                             <figure className="relative h-0 pb-[56.25%] overflow-hidden">
                                 <img
@@ -115,6 +138,30 @@ export const EventCard = (props: { event: IEvent, preview?: boolean, onClick?: (
                     </div>
                 </div>
             </div>
+            {props.preview ? <></> :
+                <EditMenu items={[
+                    {
+                        icon: "edit", action: () => {
+                            navigate(`/meetings/${props.event.meetingId}/events/${props.event.id}`)
+                        }
+                    },
+                    {
+                        icon: "delete", action: () => {
+                            setDeleteDialog(true)
+                        }
+                    }
+                ]}/>
+            }
+            {deleteDialog ?
+                <ConfirmDialog title={"Delete event"}
+                               text={"Do you really want to delete this event?"}
+                               acceptText={"Delete"}
+                               cancelText={"Cancel"}
+                               acceptAction={async () => {
+                                   await deleteEvent(props.event.id!)
+                               }}
+                               cancelAction={() => setDeleteDialog(false)}/>
+                : <></>}
         </div>
     );
 }

@@ -1,32 +1,41 @@
 import {ArcherContainer, ArcherElement} from "react-archer";
-import {useParams} from "react-router-dom";
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import {AppContext} from "../state/AppContext";
 import {EventSequence} from "../timeline/EventSequence";
 import {EventsService} from "../services/EventsService";
 import {EventsTimeline} from "../timeline/EventsTimeline";
 import {EventCard} from "./EventCard";
+import {IEvent} from "../domain/entity/IEvent";
+import moment from "moment";
 
-export const EventSelector = (props: { selectFunc: (eventId: string) => void }) => {
+export const EventSelector = (props: { event?: IEvent, meetingId: string, selected?: string[], selectFunc: (eventsId: string[]) => void }) => {
 
-    let {meetingId} = useParams();
     const appState = useContext(AppContext);
 
     const [eventSequences, setEventSequences] = useState([] as EventSequence[]);
+    const [events, setEvents] = useState(props.selected ?? []);
+
+    function changeSelected(id: string): string[] {
+        if (events.includes(id)) {
+            return events.filter(value => value !== id)
+        } else {
+            return events.concat(id)
+        }
+    }
 
     const eventsService = useMemo(() => new EventsService(appState), [appState]);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (meetingId === undefined) {
+            if (props.meetingId === undefined) {
                 return;
             }
-            const eventSequences = await eventsService.getMeetingSequences(meetingId);
+            const eventSequences = await eventsService.getMeetingSequences(props.meetingId);
 
             setEventSequences(eventSequences);
         }
         fetchData().catch(console.error);
-    }, [eventsService, meetingId]);
+    }, [eventsService, props]);
 
     const timeline = new EventsTimeline(...eventSequences);
     const timelineHours = timeline.getTimeline();
@@ -64,9 +73,13 @@ export const EventSelector = (props: { selectFunc: (eventId: string) => void }) 
                                                                 >
                                                                     <div>
                                                                         <EventCard
-                                                                            onClick={() => props.selectFunc(timelineEvent.event.id!)}
+                                                                            onClick={() => setEvents(changeSelected(timelineEvent.event.id!))}
                                                                             event={timelineEvent.event}
-                                                                            preview={true}/>
+                                                                            preview={true}
+                                                                            selected={events.includes(timelineEvent.event.id!)}
+                                                                            inactive={props.event?.id === timelineEvent.event.id ||
+                                                                                moment(timelineEvent.event.startDate) >= moment(props.event?.startDate)}
+                                                                        />
                                                                     </div>
                                                                 </ArcherElement>
                                                             )
@@ -80,6 +93,14 @@ export const EventSelector = (props: { selectFunc: (eventId: string) => void }) 
                             )
                         })}
 
+
+                    </div>
+                    <div
+                        onClick={() => props.selectFunc(events)}
+                        className={"fixed bottom-5 left-5 z-50 bg-white drop-shadow-lg py-3 px-4 rounded-2xl text-indigo-500 cursor-pointer z-50"}>
+                        <div className={"flex items-center gap-1"}>
+                            <span className={"text-2xl"}>Save</span>
+                        </div>
                     </div>
                 </ArcherContainer>
             </div>

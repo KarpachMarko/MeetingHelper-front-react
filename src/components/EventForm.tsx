@@ -19,36 +19,37 @@ export const EventForm = (props: { event?: IEvent }) => {
         budgetPerPerson?: number
         locationTitle: string
         locationLink: string
-        previousEventId?: string
+        previousEventsId: string[]
     }
+
+
+    let {meetingId} = useParams();
+    const appState = useContext(AppContext);
+    const navigate = useNavigate();
 
     const formInit: IForm = {
         title: props.event?.title ?? "",
         description: props.event?.description ?? "",
-        startDate: (props.event?.startDate ? moment(props.event?.startDate) : moment()).format("YYYY-MM-DDThh:mm"),
-        endDate: props.event?.endDate ? moment(props.event?.endDate).format("YYYY-MM-DDThh:mm") : undefined,
+        startDate: (props.event?.startDate ? moment(props.event?.startDate) : moment()).format("YYYY-MM-DDTHH:mm"),
+        endDate: props.event?.endDate ? moment(props.event?.endDate).format("YYYY-MM-DDTHH:mm") : undefined,
         budgetPerPerson: props.event?.budgetPerPerson ?? 0,
         locationTitle: props.event?.locationTitle ?? "",
-        locationLink: props.event?.locationLink ?? ""
+        locationLink: props.event?.locationLink ?? "",
+        previousEventsId: []
     }
+
+    const eventNavigationsService = useMemo(() => new EventNavigationsService(appState), [appState]);
+    const eventsService = useMemo(() => new EventsService(appState), [appState])
 
     const [form, setForm] = useState(formInit);
     const [cancel, setCancel] = useState(false);
     const [useBudget, setUseBudget] = useState(!!props.event?.budgetPerPerson);
-
     const [rootEvent, setRootEvent] = useState(true);
     const [selectEvent, setSelectEvent] = useState(false);
     const [events, setEvents] = useState([] as IEvent[]);
 
-    const {meetingId} = useParams();
-
-    const appState = useContext(AppContext);
-    const navigate = useNavigate();
-    const eventsService = useMemo(() => new EventsService(appState), [appState])
-    const eventNavigationsService = useMemo(() => new EventNavigationsService(appState), [appState]);
-
     useEffect(() => {
-        setForm(formInit)
+        let form = formInit
         setUseBudget(!!props.event?.budgetPerPerson)
 
         const fetchData = async () => {
@@ -57,10 +58,17 @@ export const EventForm = (props: { event?: IEvent }) => {
             }
             const events = (await eventsService.getMeetingEvents(meetingId)).data ?? [];
 
+            if (props.event?.id !== undefined) {
+                const prevEvents = (await eventsService.getPreviousMeetingEvents(props.event.id)).data ?? []
+                const prevEventsId = prevEvents.map(value => value.id!);
+                form = {...form, previousEventsId: prevEventsId}
+                setRootEvent(prevEventsId.length === 0)
+            }
+
             setEvents(events);
         }
 
-        fetchData().catch(console.error)
+        fetchData().then(() => setForm(form)).catch(console.error)
     }, [eventsService, meetingId, props])
 
     const fieldVariants = {
@@ -68,10 +76,10 @@ export const EventForm = (props: { event?: IEvent }) => {
         closed: {scale: 0.9, opacity: 0.4}
     }
 
-    async function selectEventFunc(eventId: string) {
-        setRootEvent(false);
+    async function selectEventFunc(eventsId: string[]) {
+        setRootEvent(eventsId.length === 0);
+        setForm({...form, previousEventsId: eventsId})
         setSelectEvent(false);
-        setForm({...form, previousEventId: eventId})
     }
 
     function getEventTitle(eventId: string): string {
@@ -91,17 +99,26 @@ export const EventForm = (props: { event?: IEvent }) => {
         if (props.event?.id) {
             event.id = props.event?.id
             eventsService.edit(event).then(() => {
-                navigate(`/meetings/${meetingId}/events`)
+                eventNavigationsService.updateRelation(
+                    meetingId!,
+                    event.id!,
+                    rootEvent ? [] : form.previousEventsId
+                ).then(() => {
+                    navigate(`/meetings/${meetingId}/events`)
+                })
             })
         } else {
             eventsService.add(event).then(res => {
                 if (!rootEvent) {
-                    eventNavigationsService.add({
-                        previousEventId: form.previousEventId!,
-                        NextEventId: res.data?.id!
-                    }).then(() => {
+                    eventNavigationsService.updateRelation(
+                        meetingId!,
+                        res.data?.id!,
+                        rootEvent ? [] : form.previousEventsId
+                    ).then(() => {
                         navigate(`/meetings/${meetingId}/events`)
                     })
+                } else {
+                    navigate(`/meetings/${meetingId}/events`)
                 }
             })
         }
@@ -181,7 +198,7 @@ export const EventForm = (props: { event?: IEvent }) => {
                             <input
                                 type="datetime-local"
                                 name="startDate"
-                                value={moment(form.startDate).format("YYYY-MM-DDThh:mm")}
+                                value={moment(form.startDate).format("YYYY-MM-DDTHH:mm")}
                                 onChange={event => setForm({...form, startDate: event.target.value})}
                                 className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
                             />
@@ -194,19 +211,19 @@ export const EventForm = (props: { event?: IEvent }) => {
                             <input
                                 type="datetime-local"
                                 name="endDate"
-                                value={form.endDate ? moment(form.endDate).format("YYYY-MM-DDThh:mm") : ""}
+                                value={form.endDate ? moment(form.endDate).format("YYYY-MM-DDTHH:mm") : ""}
                                 onChange={event => setForm({...form, endDate: event.target.value})}
                                 className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
                             />
                         </label>
                     </div>
-                    {events.length === 0 ? <></> :
+                    {events.filter(value => value.id !== props.event?.id).length === 0 ? <></> :
                         <div className={"flex flex-col gap-1"}>
                             <label
                                 className="flex-1 block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 m-0"
                             >
                             <span
-                                className="text-xs font-medium text-gray-500">{rootEvent ? "Root event" : `Previous event: ${getEventTitle(form.previousEventId!)}`}</span>
+                                className="text-xs font-medium text-gray-500">{rootEvent ? "Root event" : `Previous event: ${form.previousEventsId.map(value => getEventTitle(value)).join(", ")}`}</span>
                             </label>
                             <div className={"flex gap-2"}>
                                 <div
@@ -252,11 +269,11 @@ export const EventForm = (props: { event?: IEvent }) => {
                 </div>
                 <div className={"flex justify-end gap-2"}>
                     <div
-                        className="font-semibold text-md inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
+                        className="font-semibold text-md inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500 cursor-pointer"
                         onClick={() => setCancel(true)}>Cancel
                     </div>
                     <div
-                        className="font-semibold text-lg inline-flex items-center justify-center px-6 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-500 focus:outline-none focus-visible:ring-2 hover:bg-indigo-600 text-white"
+                        className="font-semibold text-lg inline-flex items-center justify-center px-6 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-500 focus:outline-none focus-visible:ring-2 hover:bg-indigo-600 text-white cursor-pointer"
                         onClick={() => sendForm()}>Submit
                     </div>
                 </div>
@@ -272,7 +289,8 @@ export const EventForm = (props: { event?: IEvent }) => {
 
             {selectEvent ?
                 <div className={"fixed top-0 left-0 h-screen w-screen bg-gray-800 bg-opacity-70 z-50"}>
-                    <EventSelector selectFunc={selectEventFunc}/>
+                    <EventSelector event={props.event} meetingId={meetingId!} selected={form.previousEventsId}
+                                   selectFunc={selectEventFunc}/>
                 </div> :
                 <></>}
         </div>

@@ -6,6 +6,7 @@ import {Events} from "./views/Event/Events";
 import {CreateMeeting} from "./views/Meeting/CreateMeeting";
 import {EditMeeting} from "./views/Meeting/EditMeeting";
 import {CreateEvent} from "./views/Event/CreateEvent";
+import {EditEvent} from "./views/Event/EditEvent";
 
 export const App = () => {
 
@@ -26,6 +27,7 @@ export const App = () => {
                     <Route path="/meetings/:meetingId" element={<EditMeeting/>}/>
                     <Route path="/meetings/:meetingId/events" element={<Events/>}/>
                     <Route path="/meetings/:meetingId/events/new" element={<CreateEvent/>}/>
+                    <Route path="/meetings/:meetingId/events/:eventId" element={<EditEvent/>}/>
                 </Routes>
             </AppContextProvider>
         </>

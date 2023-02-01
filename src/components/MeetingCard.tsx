@@ -10,14 +10,11 @@ import {EditMenu} from "./EditMenu";
 import {useNavigate} from "react-router-dom";
 import {MeetingsService} from "../services/MeetingsService";
 import {ConfirmDialog} from "./ConfirmDialog";
+import {getRoleName} from "../enum/GuestRole";
 
 export const MeetingCard = (props: { meeting: IMeeting }) => {
     const percent = 74;
     const circumference = 30 * 2 * Math.PI;
-
-    const roles: { [key: number]: string } = useMemo(() => {
-        return {1: "Creator", 2: "Manager", 3: "Guest"}
-    }, []);
 
     const startDate = new Date(props.meeting.startDate);
     const endDate = props.meeting.endDate ? new Date(props.meeting.endDate) : undefined;
@@ -39,7 +36,7 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
                 for (const meetingUser of response.data) {
                     const user = (await usersService.get(meetingUser.userId)).data;
                     if (user != null) {
-                        result.push({user: user, role: roles[meetingUser.role], priority: 2})
+                        result.push({user: user, role: getRoleName(meetingUser.role), priority: 2})
                     }
                 }
                 setGuests(result);
@@ -47,7 +44,7 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
         }
         fetchData().catch(console.error);
 
-    }, [meetingUsersService, props.meeting.id, roles, usersService])
+    }, [meetingUsersService, props.meeting.id, usersService])
 
     function cardYearPreview() {
         if (endDate) {

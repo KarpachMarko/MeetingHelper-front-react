@@ -1,5 +1,5 @@
 import {motion} from "framer-motion";
-import React, {useContext, useMemo, useState} from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import {Guests} from "./Guests";
 import {IEvent} from "../domain/entity/IEvent";
 import {EditMenu} from "./EditMenu";
@@ -7,6 +7,10 @@ import {ConfirmDialog} from "./ConfirmDialog";
 import {useNavigate} from "react-router-dom";
 import {EventsService} from "../services/EventsService";
 import {AppContext} from "../state/AppContext";
+import {IGuest} from "../domain/model/IGuest";
+import {UsersService} from "../services/UsersService";
+import {EventUsersService} from "../services/EventUsersService";
+import {getStatusName} from "../enum/GuestStatus";
 
 export const EventCard = (props: {
     event: IEvent,
@@ -42,9 +46,31 @@ export const EventCard = (props: {
     const navigate = useNavigate();
     const appState = useContext(AppContext);
     const eventsService = useMemo(() => new EventsService(appState), [appState]);
+    const eventUsersService = useMemo(() => new EventUsersService(appState), [appState]);
+    const usersService = useMemo(() => new UsersService(appState), [appState]);
 
     const [isOpen, setIsOpen] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(false);
+
+    const [guests, setGuests] = useState([] as IGuest[])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await eventUsersService.getEventUsersInEvent(props.event.id!);
+            if (response.status < 300 && response.data !== undefined) {
+                const result: IGuest[] = [];
+                for (const meetingUser of response.data) {
+                    const user = (await usersService.get(meetingUser.userId)).data;
+                    if (user != null) {
+                        result.push({user: user, role: getStatusName(meetingUser.status), priority: 2})
+                    }
+                }
+                setGuests(result);
+            }
+        }
+        fetchData().catch(console.error);
+
+    }, [eventUsersService, props, usersService])
 
     function deleteEvent(eventId: string): void {
         eventsService.delete(eventId).then(() =>
@@ -54,7 +80,7 @@ export const EventCard = (props: {
 
     return (
         <div className="h-full relative my-4" onClick={props.inactive ? doNothing : clickFunc}>
-            {props.preview ? <></> : <Guests guests={[]}/>}
+            {props.preview ? <></> : <Guests guests={guests}/>}
             <div className="h-full relative">
                 <div className="max-w-xs mx-auto">
                     <div
@@ -114,8 +140,7 @@ export const EventCard = (props: {
                                     Meat
                                 </button>
                                 <div className={"flex justify-center my-1"}>
-                                    <a className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 transition duration-150 ease-in-out focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
-                                       href="#">Show all requirements</a>
+                                    <div className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 transition duration-150 ease-in-out focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500">Show all requirements</div>
                                 </div>
 
                             </motion.div>

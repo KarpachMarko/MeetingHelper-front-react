@@ -65,10 +65,10 @@ export const MeetingForm = (props: { meeting?: IMeeting }) => {
     return (
         <div className={"shadow-2xl bg-white rounded-lg w-10/12 p-4 mx-5 min-h-min flex flex-col items-center"}>
             <div className={"w-full"}>
-                <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700">
                     Meeting
                 </label>
-                <div className="relative my-1 rounded-md">
+                <div className="relative my-1 rounded-md flex flex-col gap-2">
                     <label
                         className="block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
                     >
@@ -76,7 +76,7 @@ export const MeetingForm = (props: { meeting?: IMeeting }) => {
 
                         <input
                             type="text"
-                            name="title"
+                            name="meetingTitle"
                             value={form.title}
                             onChange={event => setForm({...form, title: event.target.value})}
                             placeholder="Trip to london"
@@ -85,7 +85,7 @@ export const MeetingForm = (props: { meeting?: IMeeting }) => {
                     </label>
 
                     <textarea
-                        name="description"
+                        name="meetingDescription"
                         className="block text-gray-800 w-full overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
                         placeholder="Description"
                         value={form.description}
@@ -93,7 +93,7 @@ export const MeetingForm = (props: { meeting?: IMeeting }) => {
                         rows={6}
                     />
 
-                    <div className={"flex gap-1 justify-around mt-2"}>
+                    <div className={"flex gap-1 justify-around"}>
                         <label
                             className="flex-1 block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
                         >
@@ -101,7 +101,7 @@ export const MeetingForm = (props: { meeting?: IMeeting }) => {
 
                             <input
                                 type="date"
-                                name="startDate"
+                                name="meetingStartDate"
                                 value={moment(form.startDate).format("YYYY-MM-DD")}
                                 onChange={event => setForm({...form, startDate: event.target.value})}
                                 className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
@@ -114,7 +114,7 @@ export const MeetingForm = (props: { meeting?: IMeeting }) => {
 
                             <input
                                 type="date"
-                                name="endDate"
+                                name="meetingEndDate"
                                 value={form.endDate ? moment(form.endDate).format("YYYY-MM-DD") : ""}
                                 onChange={event => setForm({...form, endDate: event.target.value})}
                                 className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
@@ -122,7 +122,7 @@ export const MeetingForm = (props: { meeting?: IMeeting }) => {
                         </label>
                     </div>
                     <div className={"flex flex-col items-end"}>
-                        <label className="relative block inline-flex items-center cursor-pointer">
+                        <label className="relative block inline-flex items-center cursor-pointer mb-1.5">
                             <input className="sr-only peer" type="checkbox" checked={useBudget}
                                    onChange={event => setUseBudget(event.target.checked)}/>
                             <div
@@ -143,7 +143,7 @@ export const MeetingForm = (props: { meeting?: IMeeting }) => {
                                 value={form.budgetPerPerson}
                                 onChange={event => setForm({...form, budgetPerPerson: +event.target.value})}
                                 disabled={!useBudget}
-                                name="budgetPerPerson"
+                                name="meetingBudgetPerPerson"
                                 className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
                             />
                         </motion.label>

@@ -127,7 +127,7 @@ export const EventForm = (props: { event?: IEvent }) => {
     return (
         <div className={"shadow-2xl bg-white rounded-lg w-10/12 p-4 mx-5 min-h-min flex flex-col items-center"}>
             <div className={"w-full"}>
-                <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-700">
                     Event
                 </label>
                 <div className="relative my-1 rounded-md flex flex-col gap-2">
@@ -138,7 +138,7 @@ export const EventForm = (props: { event?: IEvent }) => {
 
                         <input
                             type="text"
-                            name="title"
+                            name="eventTitle"
                             value={form.title}
                             onChange={event => setForm({...form, title: event.target.value})}
                             placeholder="Trip to london"
@@ -147,7 +147,7 @@ export const EventForm = (props: { event?: IEvent }) => {
                     </label>
 
                     <textarea
-                        name="description"
+                        name="eventDescription"
                         className="block text-gray-800 w-full overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
                         placeholder="Description"
                         value={form.description}
@@ -156,7 +156,7 @@ export const EventForm = (props: { event?: IEvent }) => {
                     />
 
                     <div className={"flex flex-col gap-1"}>
-                        <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-0">
+                        <label className="block text-sm font-medium text-gray-700 mb-0">
                             Location
                         </label>
                         <label
@@ -166,7 +166,7 @@ export const EventForm = (props: { event?: IEvent }) => {
 
                             <input
                                 type="text"
-                                name="locationTitle"
+                                name="eventLocationTitle"
                                 value={form.locationTitle}
                                 onChange={event => setForm({...form, locationTitle: event.target.value})}
                                 placeholder="Viru Gate"
@@ -180,7 +180,7 @@ export const EventForm = (props: { event?: IEvent }) => {
 
                             <input
                                 type="text"
-                                name="locationLink"
+                                name="eventLocationLink"
                                 value={form.locationLink}
                                 onChange={event => setForm({...form, locationLink: event.target.value})}
                                 placeholder="https://goo.gl/maps/..."
@@ -197,7 +197,7 @@ export const EventForm = (props: { event?: IEvent }) => {
 
                             <input
                                 type="datetime-local"
-                                name="startDate"
+                                name="eventStartDate"
                                 value={moment(form.startDate).format("YYYY-MM-DDTHH:mm")}
                                 onChange={event => setForm({...form, startDate: event.target.value})}
                                 className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
@@ -210,7 +210,7 @@ export const EventForm = (props: { event?: IEvent }) => {
 
                             <input
                                 type="datetime-local"
-                                name="endDate"
+                                name="eventEndDate"
                                 value={form.endDate ? moment(form.endDate).format("YYYY-MM-DDTHH:mm") : ""}
                                 onChange={event => setForm({...form, endDate: event.target.value})}
                                 className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
@@ -240,7 +240,7 @@ export const EventForm = (props: { event?: IEvent }) => {
                         </div>
                     }
                     <div className={"flex flex-col items-end"}>
-                        <label className="relative block inline-flex items-center cursor-pointer">
+                        <label className="relative block inline-flex items-center cursor-pointer mb-1.5">
                             <input className="sr-only peer" type="checkbox" checked={useBudget}
                                    onChange={event => setUseBudget(event.target.checked)}/>
                             <div
@@ -261,7 +261,7 @@ export const EventForm = (props: { event?: IEvent }) => {
                                 value={form.budgetPerPerson}
                                 onChange={event => setForm({...form, budgetPerPerson: +event.target.value})}
                                 disabled={!useBudget}
-                                name="budgetPerPerson"
+                                name="eventBudgetPerPerson"
                                 className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
                             />
                         </motion.label>

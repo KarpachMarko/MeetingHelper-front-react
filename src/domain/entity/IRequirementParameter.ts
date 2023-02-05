@@ -1,6 +1,7 @@
 import {IEntityId} from "./IEntityId";
 
 export interface IRequirementParameter extends IEntityId{
-    requirementDesc: string
+    parameterDesc: string
     priority: number
+    requirementId?: string
 }

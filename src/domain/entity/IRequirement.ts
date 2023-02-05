@@ -1,7 +1,9 @@
-export interface IRequirement {
+import {IEntityId} from "./IEntityId";
+
+export interface IRequirement extends IEntityId{
     title: string
     description: string
     budgetPerPerson: number
-    decisionDate: Date
+    decisionDate: string
     eventId: string
 }

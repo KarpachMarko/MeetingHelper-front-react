@@ -1,14 +1,18 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import moment from "moment";
 import {AppContext} from "../state/AppContext";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {PrioritySelector} from "./PrioritySelector";
 import {IRequirementParameter} from "../domain/entity/IRequirementParameter";
 import {ConfirmDialog} from "./ConfirmDialog";
 import {AnimatePresence, motion} from "framer-motion";
 import {IRequirement} from "../domain/entity/IRequirement";
+import {RequirementParametersService} from "../services/RequirementParametersService";
+import {RequirementsService} from "../services/RequirementsService";
 
 export const RequirementForm = (props: { requirement?: IRequirement }) => {
+
+    const {meetingId, eventId} = useParams();
 
     interface IForm {
         title: string
@@ -25,41 +29,55 @@ export const RequirementForm = (props: { requirement?: IRequirement }) => {
     }
 
     const parametersInit: IRequirementParameter[] = [
-        {priority: 0, requirementDesc: ""}
+        {priority: 0, parameterDesc: ""}
     ]
-
+    
+    const navigate = useNavigate();
+    const appState = useContext(AppContext);
+    
+    const requirementsService = useMemo(() => new RequirementsService(appState), [appState]);
+    const requirementParametersService = useMemo(() => new RequirementParametersService(appState), [appState]);
+    
     const [form, setForm] = useState(formInit);
     const [parameters, setParameters] = useState(parametersInit)
     const [cancel, setCancel] = useState(false);
 
     useEffect(() => {
         setForm(formInit)
-    }, [props])
 
-    const appState = useContext(AppContext);
-    const navigate = useNavigate();
+        const fetchParameters = async () => {
+            if (props.requirement?.id == null) {
+                return
+            }
+            const response = await requirementParametersService.getRequirementParameters(props.requirement?.id);
+            if (response.status < 300 && response.data !== undefined) {
+                setParameters(response.data);
+            }
+        }
+        fetchParameters().catch(console.error);
+
+    }, [eventId, meetingId, navigate, props, requirementParametersService])
 
     const sendForm = () => {
-        const requirement = {form}
-        console.log(form)
-        console.log(requirement)
-        console.log(parameters)
-        console.log("======")
-        // TODO: send form data
-        // const meeting: IMeeting = form
-        // if (!useBudget) {
-        //     meeting.budgetPerPerson = undefined
-        // }
-        // if (props.meeting?.id) {
-        //     meeting.id = props.meeting?.id
-        //     meetingsService.edit(meeting).then(() => {
-        //         navigate("/meetings")
-        //     })
-        // } else {
-        //     meetingsService.add(meeting).then(() => {
-        //         navigate("/meetings")
-        //     })
-        // }
+        if (eventId == null) {
+            return;
+        }
+        const requirement: IRequirement = {...form, decisionDate: form.deadlineDate, eventId: eventId}
+        if (props.requirement?.id) {
+            requirement.id = props.requirement?.id
+            requirementsService.edit(requirement).then(() => {
+                requirementParametersService.setRequirementParameters(requirement.id!, parameters.map(value => {return {...value, requirementId: requirement.id} })).then(() => {
+                    navigate(`/meetings/${meetingId}/events/${eventId}/requirements`)
+                })
+            })
+        } else {
+            requirementsService.add(requirement).then(res => {
+                const requirementId = res.data?.id!;
+                requirementParametersService.setRequirementParameters(requirementId, parameters.map(value => {return {...value, requirementId: requirementId} })).then(() => {
+                    navigate(`/meetings/${meetingId}/events/${eventId}/requirements`)
+                })
+            })
+        }
     }
 
     return (
@@ -161,12 +179,12 @@ export const RequirementForm = (props: { requirement?: IRequirement }) => {
 
                                             <input
                                                 type="text"
-                                                name="title"
-                                                value={value.requirementDesc}
+                                                name="parameterDesc"
+                                                value={value.parameterDesc}
                                                 onChange={event => {
                                                     setParameters(parameters.map((val, i) => i === index ? {
                                                         ...val,
-                                                        requirementDesc: event.target.value
+                                                        parameterDesc: event.target.value
                                                     } : val))
                                                 }}
                                                 placeholder="In stock"
@@ -180,7 +198,7 @@ export const RequirementForm = (props: { requirement?: IRequirement }) => {
                         <motion.label
                             layoutId={"addNew"}
                             onClick={() => {
-                                setParameters(parameters.concat({priority: 0, requirementDesc: ""}))
+                                setParameters(parameters.concat({priority: 0, parameterDesc: ""}))
                             }}
                             className="block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600 cursor-pointer"
                         >
@@ -214,7 +232,7 @@ export const RequirementForm = (props: { requirement?: IRequirement }) => {
                     cancelText={"No"}
                     cancelAction={() => setCancel(false)}
                     acceptText={"Yes"}
-                    acceptAction={() => navigate("/meetings")}/> : <></> // TODO: change navigation
+                    acceptAction={() => navigate(`/meetings/${meetingId}/events/${eventId}/requirements`)}/> : <></>
             }
         </div>
     )

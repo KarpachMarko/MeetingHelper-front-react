@@ -9,6 +9,9 @@ import moment from "moment";
 import {EditMenu} from "./EditMenu";
 import {ConfirmDialog} from "./ConfirmDialog";
 import {RequirementsService} from "../services/RequirementsService";
+import {PaymentsService} from "../services/PaymentsService";
+import {IPayment} from "../domain/entity/IPayment";
+import {Guests} from "./Guests";
 
 export const Requirement = (props: { requirement: IRequirement }) => {
 
@@ -16,10 +19,12 @@ export const Requirement = (props: { requirement: IRequirement }) => {
     const appState = useContext(AppContext);
     const requirementsService = useMemo(() => new RequirementsService(appState), [appState]);
     const requirementParametersService = useMemo(() => new RequirementParametersService(appState), [appState]);
+    const paymentsService = useMemo(() => new PaymentsService(appState), [appState]);
 
     const [deleteDialog, setDeleteDialog] = useState(false);
 
     const [parameters, setParameters] = useState([] as IRequirementParameter[])
+    const [payments, setPayments] = useState([] as IPayment[])
 
     useEffect(() => {
         const fetchRequirements = async () => {
@@ -31,9 +36,19 @@ export const Requirement = (props: { requirement: IRequirement }) => {
                 setParameters(response.data);
             }
         }
+        const fetchPayments = async () => {
+            if (props.requirement.id == null) {
+                return;
+            }
+            const response = await paymentsService.getRequirementPayment(props.requirement.id);
+            if (response.status < 300 && response.data !== undefined) {
+                setPayments(response.data);
+            }
+        }
         fetchRequirements().catch(console.error);
+        fetchPayments().catch(console.error)
 
-    }, [props.requirement.id, requirementParametersService]);
+    }, [paymentsService, props.requirement.id, requirementParametersService]);
 
     function deleteEvent(eventId: string): void {
         requirementsService.delete(eventId).then(() =>
@@ -41,20 +56,34 @@ export const Requirement = (props: { requirement: IRequirement }) => {
         )
     }
 
+    function getBudgetSpentPercent(): number {
+        const totalSpent = payments.map(val => val.amount).reduce((prev, cur) => prev + cur, 0);
+        if (totalSpent > props.requirement.budgetPerPerson) {
+            return 100;
+        } else {
+            return totalSpent / props.requirement.budgetPerPerson * 100;
+        }
+    }
+
     return (
-        <div className="h-full">
+        <div className="h-full relative">
+
+            <div className={"absolute -top-16 w-full"}>
+                <Guests guests={[]}/>
+            </div>
+
             <div className="max-w-xs mx-auto">
                 <div className="flex flex-col h-full bg-white shadow-lg rounded-lg">
 
                     <div className="relative flex-grow flex flex-col p-5">
                         <div className="absolute top-0 left-0 w-full bg-gray-200 rounded-t-full h-1.5 dark:bg-gray-700">
                             <div className="bg-indigo-500 h-1.5 rounded-t-full dark:bg-blue-500"
-                                 style={{width: "60%"}}></div>
+                                 style={{width: `${getBudgetSpentPercent()}%`}}></div>
                         </div>
 
                         <div
                             className="absolute -top-3 right-2 rounded-full bg-indigo-500 text-white font-bold shadow-md">
-                            <span className="px-4 py-2">45$</span>
+                            <span className="px-4 py-2">{props.requirement.budgetPerPerson}$</span>
                         </div>
 
                         <div className="flex-grow">
@@ -83,13 +112,14 @@ export const Requirement = (props: { requirement: IRequirement }) => {
                         <hr className="mb-3"/>
 
                         <div className="flex flex-col items-center space-x-2">
-                            <span className="font-light text-gray-500">Deadline: {moment(props.requirement.decisionDate).format("DD.MM")}</span>
+                            <span
+                                className="font-light text-gray-500">Deadline: {moment(props.requirement.decisionDate).format("DD.MM")}</span>
                         </div>
 
                         <div className={"flex justify-center gap-2"}>
                             <div
                                 className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 transition duration-150 ease-in-out focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500 cursor-pointer">
-                                Show all requirements
+                                Show options
                             </div>
                         </div>
 

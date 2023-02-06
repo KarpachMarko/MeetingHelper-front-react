@@ -53,7 +53,7 @@ export const Events = () => {
                     <span className={"text-lg"}>Back to meetings</span>
                 </div>
             </div>
-            <div className={"w-screen h-screen mt-16 overflow-y-scroll snap-y snap-mandatory"}>
+            <div className={"w-screen h-screen mt-24 overflow-y-scroll snap-y snap-mandatory"}>
                 <div>
                     <ArcherContainer strokeColor="#818CF8" className="h-full flex mx-auto w-max">
                         <div className="flex flex-col justify-center items-center h-full gap-20 m-5">

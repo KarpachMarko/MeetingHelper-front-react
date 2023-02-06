@@ -45,7 +45,7 @@ export const Requirements = () => {
                     <span className={"text-lg"}>Back to events</span>
                 </div>
             </div>
-            <div className={"flex gap-5 justify-center items-center flex-wrap mt-16"}>
+            <div className={"flex gap-5 justify-center items-center flex-wrap mt-32"}>
                 {requirements.map((value, index) => (
                     <Requirement requirement={value} key={index}/>
                 ))}

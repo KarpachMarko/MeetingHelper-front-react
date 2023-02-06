@@ -67,7 +67,8 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
                 <Guests
                     guests={guests}
                     opened={false}/>
-                <div className="relative bg-indigo-400 shadow-lg rounded-lg shadow-xl p-5 overflow-hidden" onClick={() => navigate(`${props.meeting.id}/events`)}>
+                <div className="relative bg-indigo-400 shadow-lg rounded-lg shadow-xl p-5 overflow-hidden"
+                     onClick={() => navigate(`${props.meeting.id}/events`)}>
 
 
                     <svg className="absolute top-0 right-0" width="158" height="119" aria-hidden="true">
@@ -206,7 +207,12 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
                             {props.meeting.title}
                         </h3>
                         <p className="text-indigo-200">
-                            {props.meeting.description}
+                            {props.meeting.description.split("\n").map((value, index) => (
+                                <span key={index}>
+                                    {index !== 0 ? <br/> : <></>}
+                                    {value}
+                                </span>
+                            ))}
                         </p>
 
                         <div className="relative h-20">

@@ -13,6 +13,7 @@ import {EventUsersService} from "../services/EventUsersService";
 import {getStatusName} from "../enum/GuestStatus";
 import {IRequirement} from "../domain/entity/IRequirement";
 import {RequirementsService} from "../services/RequirementsService";
+import {PaymentsService} from "../services/PaymentsService";
 
 export const EventCard = (props: {
     event: IEvent,
@@ -50,6 +51,7 @@ export const EventCard = (props: {
     const eventsService = useMemo(() => new EventsService(appState), [appState]);
     const eventUsersService = useMemo(() => new EventUsersService(appState), [appState]);
     const requirementsService = useMemo(() => new RequirementsService(appState), [appState]);
+    const paymentsService = useMemo(() => new PaymentsService(appState), [appState]);
     const usersService = useMemo(() => new UsersService(appState), [appState]);
 
     const [isOpen, setIsOpen] = useState(false);
@@ -57,6 +59,7 @@ export const EventCard = (props: {
 
     const [guests, setGuests] = useState([] as IGuest[])
     const [requirements, setRequirements] = useState([] as IRequirement[])
+    const [totalSpent, setTotalSpent] = useState(0)
 
     useEffect(() => {
         const fetchGuests = async () => {
@@ -78,10 +81,17 @@ export const EventCard = (props: {
                 setRequirements(response.data);
             }
         }
+        const fetchSpent = async () => {
+            const response = await paymentsService.getEventsTotalPayment(props.event.id!);
+            if (response.status < 300 && response.data !== undefined) {
+                setTotalSpent(response.data);
+            }
+        }
         fetchGuests().catch(console.error);
         fetchRequirements().catch(console.error);
+        fetchSpent().catch(console.error);
 
-    }, [eventUsersService, props, requirementsService, usersService])
+    }, [eventUsersService, paymentsService, props, requirementsService, usersService])
 
     function deleteEvent(eventId: string): void {
         eventsService.delete(eventId).then(() =>
@@ -90,30 +100,35 @@ export const EventCard = (props: {
     }
 
     return (
-        <div className="h-full relative my-4" onClick={props.inactive ? doNothing : clickFunc}>
-            {props.preview ? <></> : <Guests guests={guests}/>}
+        <div className="h-full relative mb-4 mt-16" onClick={props.inactive ? doNothing : clickFunc}>
+
+            {props.preview ? <></> :
+            <div className={"absolute w-full -top-16"}>
+                <Guests guests={guests}/>
+            </div>
+            }
+
             <div className="h-full relative">
                 <div className="max-w-xs mx-auto">
                     <div
-                        className={`flex flex-col h-full ${props.inactive ? 'bg-gray-600' : 'bg-white'} box-border shadow-lg rounded-lg overflow-hidden ${props.selected ? 'shadow-indigo-400' : ''}`}>
+                        className={`flex flex-col h-full ${props.inactive ? 'bg-gray-600' : 'bg-white'} box-border shadow-lg rounded-lg ${props.selected ? 'shadow-indigo-400' : ''}`}>
                         {props.preview ? <></> :
-                            <figure className="relative h-0 pb-[56.25%] overflow-hidden">
-                                <img
-                                    className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition duration-700 ease-out"
-                                    src="https://res.cloudinary.com/dc6deairt/image/upload/v1638284256/course-img_tf0g8c.png"
-                                    width="320" height="180" alt="Course"/>
+                            <div className={"relative overflow-visible"}>
+                                {props.event.budgetPerPerson ?
+                                    <>
+                                        <div
+                                            className="absolute bottom-0 w-full bg-gray-200 rounded-t-full h-1.5 dark:bg-gray-700">
+                                            <div className="bg-indigo-500 h-1.5 rounded-t-full dark:bg-blue-500"
+                                                 style={{width: `${totalSpent / props.event.budgetPerPerson * 100}%`}}></div>
+                                        </div>
 
-                                <div
-                                    className="absolute bottom-0 w-full bg-gray-200 rounded-t-full h-1.5 dark:bg-gray-700">
-                                    <div className="bg-indigo-500 h-1.5 rounded-t-full dark:bg-blue-500"
-                                         style={{width: "60%"}}></div>
-                                </div>
-
-                                <div
-                                    className="absolute bottom-1 right-2 rounded-full bg-indigo-500 text-white font-bold shadow-md">
-                                    <span className="px-4 py-2">45$</span>
-                                </div>
-                            </figure>
+                                        <div
+                                            className="absolute bottom-1 right-2 rounded-full bg-indigo-500 text-white font-bold shadow-md">
+                                            <span className="px-4 py-2">{props.event.budgetPerPerson}$</span>
+                                        </div>
+                                    </>
+                                    : <></>}
+                            </div>
                         }
 
 
@@ -154,11 +169,15 @@ export const EventCard = (props: {
                                          stroke="currentColor" className="h-5 aspect-square">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                                     </svg>
-                                    <span onClick={() => {navigate(`${props.event.id!}/requirements/new`)}}>Add new</span>
+                                    <span onClick={() => {
+                                        navigate(`${props.event.id!}/requirements/new`)
+                                    }}>Add new</span>
                                 </div>
                                 <div className={"flex justify-center my-1"}>
                                     <div
-                                        onClick={() => {navigate(`${props.event.id!}/requirements`)}}
+                                        onClick={() => {
+                                            navigate(`${props.event.id!}/requirements`)
+                                        }}
                                         className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 transition duration-150 ease-in-out focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500 cursor-pointer">
                                         Show all requirements
                                     </div>

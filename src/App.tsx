@@ -1,4 +1,4 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {AppContextProvider, initialState} from "./state/AppContext";
 import {Route, Routes} from "react-router-dom";
 import {Meetings} from "./views/Meeting/Meetings";
@@ -20,11 +20,21 @@ export const App = () => {
             <AppContextProvider value={appState}>
                 <Routes>
 
-                    {/*<Route path={window.location.pathname} element={} />*/}
-
                     <Route path="/" element={
                         <p>{window.location.toString()}</p>
                     }/>
+
+                    {/*<Route path={window.location.pathname} element={
+                        <div className={"mt-20 flex flex-col items-center gap-20"}>
+                            <RequirementForm />
+                            <Requirement />
+                            <div className={"mx-10 flex gap-5 flex-wrap justify-center"}>
+                                <RequirementOption />
+                                <RequirementOption />
+                            </div>
+                        </div>
+                    } />*/}
+
                     <Route path="/meetings" element={<Meetings/>}/>
                     <Route path="/meetings/new" element={<CreateMeeting/>}/>
                     <Route path="/meetings/:meetingId" element={<EditMeeting/>}/>

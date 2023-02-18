@@ -77,8 +77,9 @@ export const EventSelector = (props: { event?: IEvent, meetingId: string, select
                                                                             event={timelineEvent.event}
                                                                             preview={true}
                                                                             selected={events.includes(timelineEvent.event.id!)}
-                                                                            inactive={props.event?.id === timelineEvent.event.id ||
-                                                                                moment(timelineEvent.event.startDate) >= moment(props.event?.startDate)}
+                                                                            inactive={props.event !== undefined && (
+                                                                                props.event?.id === timelineEvent.event.id ||
+                                                                                moment(timelineEvent.event.startDate) >= moment(props.event?.startDate))}
                                                                         />
                                                                     </div>
                                                                 </ArcherElement>
@@ -88,22 +89,22 @@ export const EventSelector = (props: { event?: IEvent, meetingId: string, select
                                                 </div>
                                             )
                                         })}
-                                    </div>
-                                </div>
-                            )
-                        })}
-
-
                     </div>
-                    <div
-                        onClick={() => props.selectFunc(events)}
-                        className={"fixed bottom-5 left-5 z-50 bg-white drop-shadow-lg py-3 px-4 rounded-2xl text-indigo-500 cursor-pointer z-50"}>
-                        <div className={"flex items-center gap-1"}>
-                            <span className={"text-2xl"}>Save</span>
-                        </div>
-                    </div>
-                </ArcherContainer>
             </div>
+            )
+            })}
+
+
         </div>
-    )
+    <div
+        onClick={() => props.selectFunc(events)}
+        className={"fixed bottom-5 left-5 z-50 bg-white drop-shadow-lg py-3 px-4 rounded-2xl text-indigo-500 cursor-pointer z-50"}>
+        <div className={"flex items-center gap-1"}>
+            <span className={"text-2xl"}>Save</span>
+        </div>
+    </div>
+</ArcherContainer>
+</div>
+</div>
+)
 }

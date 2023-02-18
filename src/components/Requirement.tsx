@@ -12,6 +12,10 @@ import {RequirementsService} from "../services/RequirementsService";
 import {PaymentsService} from "../services/PaymentsService";
 import {IPayment} from "../domain/entity/IPayment";
 import {Guests} from "./Guests";
+import {IGuest} from "../domain/model/IGuest";
+import {RequirementUsersService} from "../services/RequirementUsersService";
+import {UsersService} from "../services/UsersService";
+import {getRequirementRoleName} from "../enum/GuestStatus";
 
 export const Requirement = (props: { requirement: IRequirement }) => {
 
@@ -19,12 +23,15 @@ export const Requirement = (props: { requirement: IRequirement }) => {
     const appState = useContext(AppContext);
     const requirementsService = useMemo(() => new RequirementsService(appState), [appState]);
     const requirementParametersService = useMemo(() => new RequirementParametersService(appState), [appState]);
+    const requirementUsersService = useMemo(() => new RequirementUsersService(appState), [appState]);
     const paymentsService = useMemo(() => new PaymentsService(appState), [appState]);
+    const usersService = useMemo(() => new UsersService(appState), [appState]);
 
     const [deleteDialog, setDeleteDialog] = useState(false);
 
     const [parameters, setParameters] = useState([] as IRequirementParameter[])
     const [payments, setPayments] = useState([] as IPayment[])
+    const [guests, setGuests] = useState([] as IGuest[])
 
     useEffect(() => {
         const fetchRequirements = async () => {
@@ -45,10 +52,24 @@ export const Requirement = (props: { requirement: IRequirement }) => {
                 setPayments(response.data);
             }
         }
+        const fetchGuests = async () => {
+            const response = await requirementUsersService.getRequirementUsers(props.requirement.id!);
+            if (response.status < 300 && response.data !== undefined) {
+                const result: IGuest[] = [];
+                for (const meetingUser of response.data) {
+                    const user = (await usersService.get(meetingUser.userId)).data;
+                    if (user != null) {
+                        result.push({user: user, role: getRequirementRoleName(meetingUser.role), priority: 2})
+                    }
+                }
+                setGuests(result);
+            }
+        }
         fetchRequirements().catch(console.error);
         fetchPayments().catch(console.error)
+        fetchGuests().catch(console.error)
 
-    }, [paymentsService, props.requirement.id, requirementParametersService]);
+    }, [paymentsService, props.requirement.id, requirementParametersService, requirementUsersService, usersService]);
 
     function deleteEvent(eventId: string): void {
         requirementsService.delete(eventId).then(() =>
@@ -69,7 +90,7 @@ export const Requirement = (props: { requirement: IRequirement }) => {
         <div className="h-full relative">
 
             <div className={"absolute -top-16 w-full"}>
-                <Guests guests={[]}/>
+                <Guests guests={guests}/>
             </div>
 
             <div className="max-w-xs mx-auto">

@@ -87,7 +87,7 @@ export const Requirement = (props: { requirement: IRequirement }) => {
     }
 
     return (
-        <div className="h-full relative">
+        <div className="h-full relative mt-10">
 
             <div className={"absolute -top-16 w-full"}>
                 <Guests guests={guests}/>

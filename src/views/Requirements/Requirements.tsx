@@ -5,6 +5,9 @@ import {useNavigate, useParams} from "react-router-dom";
 import {IRequirement} from "../../domain/entity/IRequirement";
 import {Requirement} from "../../components/Requirement";
 import {CardToCreate} from "../../components/CardToCreate";
+import {Page} from "../../components/Page";
+import {BackBtn} from "../../components/backBtn";
+import {ESize} from "../../enum/ESize";
 
 export const Requirements = () => {
 
@@ -31,21 +34,12 @@ export const Requirements = () => {
     }, [eventId, requirementsService])
 
     return (
-        <>
-            <div
-                onClick={() => navigate(`/meetings/${meetingId}/events`)}
-                className={"fixed top-2 left-2 z-50 bg-white drop-shadow-lg py-3 px-4 rounded-2xl text-indigo-500 cursor-pointer"}>
-                <div className={"flex items-center gap-1"}>
-                    <div className={"w-5 h-full"}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
-                             stroke="currentColor" className="h-full aspect-square">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
-                        </svg>
-                    </div>
-                    <span className={"text-lg"}>Back to events</span>
-                </div>
-            </div>
-            <div className={"flex gap-5 justify-center items-center flex-wrap mt-32"}>
+        <Page
+            name={"Requirements"}
+            nameSize={ESize.BIG}
+            backBtn={<BackBtn text={"Back to events"} action={() => navigate(`/meetings/${meetingId}/events`)}/>}
+        >
+            <div className={"flex gap-10 justify-center items-center flex-wrap"}>
                 {requirements.map((value, index) => (
                     <Requirement requirement={value} key={index}/>
                 ))}
@@ -53,6 +47,6 @@ export const Requirements = () => {
             <div className={"flex justify-center mt-10"}>
                 <CardToCreate onClick={() => navigate("new")}/>
             </div>
-        </>
+        </Page>
     )
 }

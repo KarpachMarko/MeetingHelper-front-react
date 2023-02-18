@@ -11,7 +11,7 @@ export const GuestsButton = (props: {opened: boolean, onClick: () => void}) => {
 	}
 
 	return (
-		<motion.div onClick={props.onClick} animate={props.opened ? "opened" : "closed"} variants={containerVariants} className="absolute top-2 -left-5 z-10 bg-gray-100 shadow-lg rounded-2xl w-16 p-2 aspect-square text-indigo-400 overflow-hidden flex items-center cursor-pointer">
+		<motion.div onClick={props.onClick} animate={props.opened ? "opened" : "closed"} variants={containerVariants} className="absolute top-2 -left-5 z-10 bg-white shadow-lg rounded-2xl w-16 p-2 aspect-square text-indigo-400 overflow-hidden flex items-center cursor-pointer">
 			<motion.div animate={props.opened ? "opened" : "closed"} variants={iconVariants} className="w-fit h-full flex gap-2">
 				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
 					 stroke="currentColor" className="h-full aspect-square">

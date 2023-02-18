@@ -8,6 +8,9 @@ import {EventSequence} from "../../timeline/EventSequence";
 import {EventsTimeline} from "../../timeline/EventsTimeline";
 import {CardToCreate} from "../../components/CardToCreate";
 import {ArrayUtils} from "../../utils/ArrayUtils";
+import {Page} from "../../components/Page";
+import {BackBtn} from "../../components/backBtn";
+import {ESize} from "../../enum/ESize";
 
 export const Events = () => {
 
@@ -39,21 +42,13 @@ export const Events = () => {
     }
 
     return (
-        <>
-            <div
-                onClick={() => navigate("/meetings")}
-                className={"fixed top-2 left-2 z-50 bg-white drop-shadow-lg py-3 px-4 rounded-2xl text-indigo-500 cursor-pointer"}>
-                <div className={"flex items-center gap-1"}>
-                    <div className={"w-5 h-full"}>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
-                             stroke="currentColor" className="h-full aspect-square">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
-                        </svg>
-                    </div>
-                    <span className={"text-lg"}>Back to meetings</span>
-                </div>
-            </div>
-            <div className={"w-screen h-screen mt-24 overflow-y-scroll snap-y snap-mandatory"}>
+        <Page
+            name={"Events"}
+            backBtn={<BackBtn text={"Back to meetings"} action={() => navigate("/meetings")}/>}
+            allowScroll={false}
+            nameSize={ESize.SMALL}
+        >
+            <div className={"w-screen h-full mt-2 overflow-y-scroll snap-y snap-mandatory"}>
                 <div>
                     <ArcherContainer strokeColor="#818CF8" className="h-full flex mx-auto w-max">
                         <div className="flex flex-col justify-center items-center h-full gap-20 m-5">
@@ -113,11 +108,12 @@ export const Events = () => {
                                     </div>
                                 )
                             })}
+                            <div className={"invisible"}><CardToCreate/></div>
 
                         </div>
                     </ArcherContainer>
                 </div>
             </div>
-        </>
+        </Page>
     )
 }

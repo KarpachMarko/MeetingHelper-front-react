@@ -1,5 +1,5 @@
 import {MeetingCard} from "../../components/MeetingCard";
-import {useContext, useEffect, useMemo, useState} from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import {AppContext} from "../../state/AppContext";
 import {IMeeting} from "../../domain/entity/IMeeting";
 import {initialError} from "../../domain/model/IError";
@@ -7,6 +7,7 @@ import {MeetingsService} from "../../services/MeetingsService";
 import {Error} from "../../components/Error";
 import {CardToCreate} from "../../components/CardToCreate";
 import {useNavigate} from "react-router-dom";
+import {Page} from "../../components/Page";
 
 export const Meetings = () => {
 
@@ -33,12 +34,14 @@ export const Meetings = () => {
         return <Error error={error}/>
     } else {
         return (
-            <div className={"h-screen flex items-center flex-col mt-3 gap-5 overflow-x-hidden"}>
-                {meetings.map(meeting => {
-                    return <MeetingCard key={meeting.id} meeting={meeting}/>
-                })}
-                <CardToCreate onClick={() => navigate("/meetings/new")} />
-            </div>
+            <Page name={"meetings"}>
+                <div className={"h-screen flex items-center flex-col mt-3 gap-5 overflow-x-hidden"}>
+                    {meetings.map(meeting => {
+                        return <MeetingCard key={meeting.id} meeting={meeting}/>
+                    })}
+                    <CardToCreate onClick={() => navigate("/meetings/new")}/>
+                </div>
+            </Page>
         )
     }
 }

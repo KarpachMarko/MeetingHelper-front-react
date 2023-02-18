@@ -14,6 +14,7 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@vkruglikov/react-telegram-web-app": "^1.6.0",
+    "auto-text-size": "^0.2.2",
     "axios": "^1.2.0",
     "crypto-js": "^4.1.1",
     "framer-motion": "^7.6.9",

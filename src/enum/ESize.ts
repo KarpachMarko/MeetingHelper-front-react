@@ -1,5 +1,6 @@
 export enum ESize {
 	SMALL,
 	MEDIUM,
-	BIG
+	BIG,
+	FULL
 }

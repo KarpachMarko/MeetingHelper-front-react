@@ -7,7 +7,6 @@ import {Requirement} from "../../components/Requirement";
 import {CardToCreate} from "../../components/CardToCreate";
 import {Page} from "../../components/Page";
 import {BackBtn} from "../../components/backBtn";
-import {ESize} from "../../enum/ESize";
 
 export const Requirements = () => {
 
@@ -36,7 +35,6 @@ export const Requirements = () => {
     return (
         <Page
             name={"Requirements"}
-            nameSize={ESize.BIG}
             backBtn={<BackBtn text={"Back to events"} action={() => navigate(`/meetings/${meetingId}/events`)}/>}
         >
             <div className={"flex gap-10 justify-center items-center flex-wrap"}>

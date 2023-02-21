@@ -13,18 +13,18 @@ export const Page = (props: {
     const allowScroll = props.allowScroll ?? true
     const nameSize = props.nameSize ?? ESize.MEDIUM
 
-    function getNameWidth(): string {
+    function getNameHeight(): string {
         switch (nameSize) {
             case ESize.FULL:
-                return "w-full"
-            case ESize.BIG:
-                return "w-3/4"
-            case ESize.MEDIUM:
-                return "w-1/2"
-            case ESize.SMALL:
-                return "w-1/3"
-            default:
                 return ""
+            case ESize.BIG:
+                return "h-32"
+            case ESize.MEDIUM:
+                return "h-20"
+            case ESize.SMALL:
+                return "h-10"
+            default:
+                return "h-20"
         }
     }
 
@@ -32,8 +32,8 @@ export const Page = (props: {
         <div className={`p-2 ${allowScroll ? "" : "h-screen w-screen overflow-hidden"}`}>
             {props.backBtn ? props.backBtn : <div className={"w-full h-4"}></div>}
 
-            <div className={`flex justify-center ${getNameWidth()} -z-50`}>
-                <AutoTextSize className={"text-gray-200 text-center font-extrabold tracking-widest"}>
+            <div className={`flex w-full ${getNameHeight()} -z-50`}>
+                <AutoTextSize mode={"box"} className={"text-gray-200 text-center font-extrabold tracking-widest"}>
                     {props.name.toUpperCase()}
                 </AutoTextSize>
             </div>

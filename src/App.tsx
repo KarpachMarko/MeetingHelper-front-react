@@ -10,6 +10,7 @@ import {EditEvent} from "./views/Event/EditEvent";
 import {Requirements} from "./views/Requirements/Requirements";
 import {CreateRequirement} from "./views/Requirements/CreateRequirement";
 import {EditRequirement} from "./views/Requirements/EditRequirement";
+import {MoneyTransfers} from "./views/Money transfers/MoneyTransfers";
 
 export const App = () => {
 
@@ -44,6 +45,8 @@ export const App = () => {
                     <Route path="/meetings/:meetingId/events/:eventId/requirements" element={<Requirements/>}/>
                     <Route path="/meetings/:meetingId/events/:eventId/requirements/new" element={<CreateRequirement/>}/>
                     <Route path="/meetings/:meetingId/events/:eventId/requirements/:requirementId" element={<EditRequirement/>}/>
+
+                    <Route path="/meetings/:meetingId/moneyTransfers" element={<MoneyTransfers/>}/>
                 </Routes>
             </AppContextProvider>
         </>

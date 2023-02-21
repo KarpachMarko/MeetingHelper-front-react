@@ -33,8 +33,15 @@ export class BaseService<TEntity extends IEntityId> implements IService<TEntity>
             };
         } catch (e) {
             const response = (e as AxiosError).response as AxiosResponse;
-
-            if (response.status === 401) {
+            if (response === undefined) {
+                return {
+                    status: 500,
+                    error: {
+                        responseStatus: 500,
+                        errorMsg: "Unknown"
+                    } as IError,
+                };
+            } else if (response.status === 401) {
                 return {
                     status: response.status,
                     error: {

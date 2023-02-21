@@ -65,7 +65,8 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
         <div className="h-fit w-screen relative">
             <div className="w-3/4 mx-auto relative">
                 <div className={"w flex flex-row-reverse mb-1"}>
-                    <div className={"flex justify-center items-center px-2 py-1 bg-white rounded-lg drop-shadow-md text-indigo-500 h-8 gap-1"}>
+                    <div className={"flex justify-center items-center px-2 py-1 bg-white rounded-lg drop-shadow-md text-indigo-500 h-8 gap-1"}
+                    onClick={() => {navigate(`${props.meeting.id}/moneyTransfers`)}}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                              stroke="currentColor" className="aspect-square h-full">
                             <path strokeLinecap="round" strokeLinejoin="round"

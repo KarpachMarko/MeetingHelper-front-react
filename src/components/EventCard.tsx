@@ -14,6 +14,7 @@ import {getStatusName} from "../enum/GuestStatus";
 import {IRequirement} from "../domain/entity/IRequirement";
 import {RequirementsService} from "../services/RequirementsService";
 import {PaymentsService} from "../services/PaymentsService";
+import {getExpensePercent} from "../utils/FormatingUtil";
 
 export const EventCard = (props: {
     event: IEvent,
@@ -82,7 +83,7 @@ export const EventCard = (props: {
             }
         }
         const fetchSpent = async () => {
-            const response = await paymentsService.getEventsTotalPayment(props.event.id!);
+            const response = await paymentsService.getEventsPaymentsTotal(props.event.id!);
             if (response.status < 300 && response.data !== undefined) {
                 setTotalSpent(response.data);
             }
@@ -119,7 +120,7 @@ export const EventCard = (props: {
                                         <div
                                             className="absolute bottom-0 w-full bg-gray-200 rounded-t-full h-1.5 dark:bg-gray-700">
                                             <div className="bg-indigo-500 h-1.5 rounded-t-full dark:bg-blue-500"
-                                                 style={{width: `${totalSpent / props.event.budgetPerPerson * 100}%`}}></div>
+                                                 style={{width: `${(getExpensePercent(totalSpent, props.event.budgetPerPerson))}%`}}></div>
                                         </div>
 
                                         <div

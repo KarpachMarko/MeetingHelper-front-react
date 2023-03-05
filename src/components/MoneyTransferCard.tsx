@@ -4,10 +4,11 @@ import {getTransferTypeName} from "../enum/MoneyTransferType";
 import {AppContext} from "../state/AppContext";
 import {UsersService} from "../services/UsersService";
 import {IUser} from "../domain/entity/IUser";
+import moment from "moment/moment";
 
 export const MoneyTransferCard = (props: { moneyTransfer: IMoneyTransfer }) => {
-    const approved = props.moneyTransfer.acceptedTime !== undefined;
-    const inFuture = props.moneyTransfer.sentTime === undefined;
+    const approved = props.moneyTransfer.acceptedTime != null;
+    const inFuture = props.moneyTransfer.sentTime == null;
 
     const appState = useContext(AppContext);
     const usersService = useMemo(() => new UsersService(appState), [appState]);
@@ -16,6 +17,12 @@ export const MoneyTransferCard = (props: { moneyTransfer: IMoneyTransfer }) => {
     const [senderPhoto, setSenderPhoto] = useState(undefined as string | undefined);
     const [receiver, setReceiver] = useState({} as IUser);
     const [receiverPhoto, setReceiverPhoto] = useState(undefined as string | undefined);
+
+    const formatTime = (dateStr: string) => {
+        const date = moment(dateStr);
+        return date.format("DD.MM HH:mm")
+    }
+
     useEffect(() => {
         const fetchReceiver = async () => {
             const senderId = props.moneyTransfer.senderId;
@@ -90,9 +97,9 @@ export const MoneyTransferCard = (props: { moneyTransfer: IMoneyTransfer }) => {
                 <div className={"flex justify-around py-2 font-medium border-t-[2px] border-gray-100"}>
                     <span className={"flex-1 text-center text-green-500"}>${props.moneyTransfer.amount}</span>
                     {inFuture ? <></> :
-                        <span className={"flex-1 text-center"}>{props.moneyTransfer.sentTime}</span>
+                        <span className={"flex-1 text-center"}>{formatTime(props.moneyTransfer.sentTime!)}</span>
                     }
-                    {props.moneyTransfer.transferType !== undefined ?
+                    {props.moneyTransfer.transferType != null ?
                         <span
                             className={"flex-1 text-center text-indigo-400"}>{getTransferTypeName(props.moneyTransfer.transferType)}</span>
                         : <></>}

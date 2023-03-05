@@ -1,6 +1,6 @@
 import {Page} from "../../components/Page";
 import {BackBtn} from "../../components/backBtn";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {Table} from "../../components/Table";
 import {MoneyTransferCard} from "../../components/MoneyTransferCard";
 import {IMoneyTransfer} from "../../domain/entity/IMoneyTransfer";
@@ -11,44 +11,48 @@ import {PaymentsService} from "../../services/PaymentsService";
 import {MoneyTransfersService} from "../../services/MoneyTransfersService";
 import {IPayment} from "../../domain/entity/IPayment";
 import {IUser} from "../../domain/entity/IUser";
+import moment from "moment";
+import {RequirementsService} from "../../services/RequirementsService";
 
 export const MoneyTransfers = () => {
     const navigate = useNavigate();
 
+    const {meetingId} = useParams();
+
     const appState = useContext(AppContext);
     const paymentsService = useMemo(() => new PaymentsService(appState), [appState]);
+    const requirementsService = useMemo(() => new RequirementsService(appState), [appState]);
     const moneyTransfersService = useMemo(() => new MoneyTransfersService(appState), [appState]);
     const usersService = useMemo(() => new UsersService(appState), [appState]);
 
     const [rows, setRows] = useState([] as JSX.Element[][]);
+    const [transfers, setTransfers] = useState([] as IMoneyTransfer[]);
+    const [debts, setDebts] = useState([] as IMoneyTransfer[]);
 
-    const payments: IPayment[] = useMemo(() => [
-        {
-            userId: "3f86bd90-f44b-426d-935e-1f522f8ce8f7",
-            amount: 390.14,
-            timestamp: "12.06.22",
-            requirementId: "ApartsRentId"
-        },
-        {
-            userId: "3f86bd90-f44b-426d-935e-1f522f8ce899",
-            amount: 1108.72,
-            timestamp: "22.06.22",
-            requirementId: "CarRentalId"
-        },
-    ], [])
+    const formatTime = (dateStr: string) => {
+        const date = moment(dateStr);
+        return date.format("DD.MM HH:mm")
+    }
 
     useEffect(() => {
-        const fetchRows = async () => {
-            setRows(await getPaymentRows(payments));
-        }
         const fetchPayments = async () => {
-            // const user = (await paymentsService.getMeetingPayments()).data;
+            const payments = (await paymentsService.getMeetingPayments(meetingId!)).data ?? [];
+            setRows(await getPaymentRows(payments));
             // const user = (await moneyTransfersService.getMeetingTransfers()).data;
         }
-        fetchRows().catch(console.error);
+        const fetchTransfers = async () => {
+            const transfers = (await moneyTransfersService.getMeetingMoneyTransfers(meetingId!)).data ?? [];
+            setTransfers(transfers);
+        }
+        const fetchDebts = async () => {
+            const debtsTransfers = (await moneyTransfersService.getDebtsMoneyTransfers(meetingId!)).data ?? [];
+            setDebts(debtsTransfers);
+        }
         fetchPayments().catch(console.error);
+        fetchTransfers().catch(console.error);
+        fetchDebts().catch(console.error);
 
-    }, [payments])
+    }, [paymentsService, moneyTransfersService, meetingId])
 
     const headerRows = [
         <div className="font-semibold text-left">Payer</div>,
@@ -85,21 +89,14 @@ export const MoneyTransfers = () => {
                     }
                     <div className="font-medium text-gray-800">{payer?.fullName ?? payment.userId}</div>
                 </div>,
-                <div className="text-left">{payment.requirementId}</div>,
+                <div
+                    className="text-left">{(await requirementsService.get(payment.requirementId)).data?.title ?? payment.requirementId}</div>,
                 <div className="text-left font-medium text-green-500">${payment.amount}</div>,
-                <div className="text-center">{payment.timestamp}</div>
+                <div className="text-center">{formatTime(payment.timestamp)}</div>
             ]
             rows.push(row);
         }
         return rows;
-    }
-
-    const transfer: IMoneyTransfer = {
-        amount: 200.45,
-        transferType: 0,
-        senderId: "3f86bd90-f44b-426d-935e-1f522f8ce8f7",
-        receiverId: "3f86bd90-f44b-426d-935e-1f522f8ce899",
-        sentTime: "24.06.22",
     }
 
     return (
@@ -114,17 +111,20 @@ export const MoneyTransfers = () => {
 
                 <div className={"text-lg text-gray-500 border-b-2 border-gray-200"}>Transfers</div>
                 <div className={"flex flex-wrap justify-center gap-5"}>
-                    <MoneyTransferCard moneyTransfer={transfer}/>
-                    <MoneyTransferCard moneyTransfer={{...transfer, acceptedTime: "24.06.22", transferType: 1}}/>
-                    <MoneyTransferCard moneyTransfer={{...transfer, acceptedTime: "24.06.22"}}/>
-                    <MoneyTransferCard moneyTransfer={{...transfer, transferType: 1}}/>
-                    <MoneyTransferCard moneyTransfer={transfer}/>
+                    {transfers.map((value, index) => {
+                        return (
+                            <MoneyTransferCard key={index} moneyTransfer={value}/>
+                        )
+                    })}
                 </div>
 
                 <div className={"text-lg text-gray-500 border-b-2 border-gray-200"}>Debts</div>
                 <div className={"flex flex-wrap justify-center gap-5"}>
-                    <MoneyTransferCard moneyTransfer={{...transfer, sentTime: undefined, transferType: undefined}}/>
-                    <MoneyTransferCard moneyTransfer={{...transfer, sentTime: undefined, transferType: undefined}}/>
+                    {debts.map((value, index) => {
+                        return (
+                            <MoneyTransferCard key={index} moneyTransfer={value}/>
+                        )
+                    })}
                 </div>
             </div>
         </Page>

@@ -10,14 +10,21 @@ export class PaymentsService extends BaseService<IPayment> {
         super("/payments", appState);
     }
 
-    public async getRequirementPayment(requirementId: string): Promise<IServiceResult<IPayment[]>> {
+    public async getMeetingPayments(meetingId: string): Promise<IServiceResult<IPayment[]>> {
+		const getRequest = () =>
+            httpClient.get(`${this.path}/meeting/${meetingId}`, this.getConfig());
+
+        return await this.sendRequest<IPayment[]>(getRequest);
+	}
+
+    public async getRequirementPayments(requirementId: string): Promise<IServiceResult<IPayment[]>> {
 		const getRequest = () =>
             httpClient.get(`${this.path}/requirement/${requirementId}`, this.getConfig());
 
         return await this.sendRequest<IPayment[]>(getRequest);
 	}
 
-    public async getEventsTotalPayment(eventId: string): Promise<IServiceResult<number>> {
+    public async getEventsPaymentsTotal(eventId: string): Promise<IServiceResult<number>> {
 		const getRequest = () =>
             httpClient.get(`${this.path}/event/${eventId}/total`, this.getConfig());
 

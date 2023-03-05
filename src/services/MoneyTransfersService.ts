@@ -6,7 +6,14 @@ import httpClient from "../http-client";
 
 export class MoneyTransfersService extends BaseService<IMoneyTransfer> {
     constructor(appState: IAppState) {
-        super("/moneyTransfer", appState);
+        super("/moneyTransfers", appState);
+    }
+
+    public async getMeetingMoneyTransfers(meetingId: string): Promise<IServiceResult<IMoneyTransfer[]>> {
+        const getRequest = () =>
+            httpClient.get(`${this.path}/meeting/${meetingId}`, this.getConfig());
+
+        return await this.sendRequest<IMoneyTransfer[]>(getRequest);
     }
 
     public async getDebtsMoneyTransfers(meetingId: string): Promise<IServiceResult<IMoneyTransfer[]>> {

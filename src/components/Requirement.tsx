@@ -47,7 +47,7 @@ export const Requirement = (props: { requirement: IRequirement }) => {
             if (props.requirement.id == null) {
                 return;
             }
-            const response = await paymentsService.getRequirementPayment(props.requirement.id);
+            const response = await paymentsService.getRequirementPayments(props.requirement.id);
             if (response.status < 300 && response.data !== undefined) {
                 setPayments(response.data);
             }

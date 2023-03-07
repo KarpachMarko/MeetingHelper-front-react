@@ -24,7 +24,7 @@ export class VerificationService {
         const data = this.getData();
         const hash = this.getDataHash();
 
-        const botToken = process.env["mh_bot_token"] ?? "";
+        const botToken = process.env.REACT_APP_BOT_TOKEN ?? "";
         const secretKey = crypto.HmacSHA256(botToken, "WebAppData");
 
         const checkHash = crypto.enc.Hex.stringify(crypto.HmacSHA256(data, secretKey));

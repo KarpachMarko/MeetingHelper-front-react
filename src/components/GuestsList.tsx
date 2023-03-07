@@ -2,8 +2,28 @@ import {motion} from "framer-motion";
 import React, {useState} from "react";
 import {Guest} from "./Guest";
 import {IGuest} from "../domain/model/IGuest";
+import {VerificationService} from "../services/VerificationService";
+import {addKey} from "../utils/FormatingUtil";
 
-export const GuestsList = (props: { guests: IGuest[], opened: boolean }) => {
+export type ButtonSet = { condition: ((guests: IGuest[]) => boolean), buttons: JSX.Element[] };
+
+export function inList(guests: IGuest[]): boolean {
+    if (!VerificationService.verify()) {
+        return false;
+    }
+    const myTelegramId = window.Telegram.WebApp.initDataUnsafe.user?.id;
+    if (myTelegramId == null) {
+        return false;
+    }
+    const guestsTelegramId = guests.map(value => value.user.telegramId);
+    return guestsTelegramId.includes(myTelegramId.toString());
+}
+
+export const GuestsList = (props: {
+    guests: IGuest[],
+    opened: boolean,
+    buttonSets?: ButtonSet[]
+}) => {
     const containerVariants = {
         opened: {display: "block", opacity: 1, x: "0%", minWidth: "min-content"},
         closed: {display: "none", opacity: 0, x: "-105%", minWidth: ""}
@@ -14,11 +34,13 @@ export const GuestsList = (props: { guests: IGuest[], opened: boolean }) => {
         closed: {height: 100}
     }
 
+    const buttonSets: ButtonSet[] = props.buttonSets ?? []
+
     const [selected, setSelected] = useState(-1)
 
     return (
         <motion.div animate={props.opened ? "opened" : "closed"} variants={containerVariants}
-                    className="absolute top-24 w-full bg-white shadow-2xl rounded-2xl p-2 z-20">
+                    className="absolute top-24 w-full bg-white shadow-2xl rounded-2xl p-2 z-50">
             <div className="relative ">
                 <motion.div animate={props.opened ? "opened" : "closed"} variants={listVariants}
                             className="overflow-hidden">
@@ -34,6 +56,18 @@ export const GuestsList = (props: { guests: IGuest[], opened: boolean }) => {
                                 <span className={"z-20 text-gray-600"}>Guests list is empty</span>
                             </div>
                         </div> : <></>}
+
+                    {props.buttonSets == null ? <></> :
+                        <>
+                            <div className={"my-1 gap-1 w-full flex flex-col"}>
+                                {buttonSets.filter(value => value.condition(props.guests)).map((value, index) =>
+                                    <div key={index} className={"w-full flex"}>
+                                        {value.buttons.map(addKey)}
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    }
                 </motion.div>
             </div>
         </motion.div>

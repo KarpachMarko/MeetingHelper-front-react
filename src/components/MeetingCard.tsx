@@ -11,6 +11,9 @@ import {useNavigate} from "react-router-dom";
 import {MeetingsService} from "../services/MeetingsService";
 import {ConfirmDialog} from "./ConfirmDialog";
 import {getRoleName} from "../enum/GuestRole";
+import {VerificationService} from "../services/VerificationService";
+import {inList} from "./GuestsList";
+import {BasicButton} from "./BasicButton";
 
 export const MeetingCard = (props: { meeting: IMeeting }) => {
     const percent = 74;
@@ -26,17 +29,41 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
 
     const [guests, setGuests] = useState([] as IGuest[])
     const [deleteDialog, setDeleteDialog] = useState(false);
+    const [reloadData, setReloadData] = useState(false);
     const navigate = useNavigate()
 
+    async function changeGoing(going: boolean): Promise<void> {
+        if (!VerificationService.verify()) {
+            return;
+        }
+        const myTelegramId = window.Telegram.WebApp.initDataUnsafe.user?.id;
+        if (myTelegramId == null) {
+            return;
+        }
+        const currentUser = (await usersService.get(await usersService.getCurrentUserId()));
+        if (currentUser?.data?.id != null) {
+            const meetingUsers = (await meetingUsersService.getAll()).data ?? [];
+            const meetingUser = meetingUsers.find(value => value.userId === currentUser?.data?.id && value.meetingId === props.meeting.id)
+            if (meetingUser != null) {
+                meetingUsersService.edit({...meetingUser, going: going}).then(() => {
+                    setReloadData(true);
+                })
+            }
+        }
+    }
+
     useEffect(() => {
+        setReloadData(false)
         const fetchData = async () => {
             const response = await meetingUsersService.getMeetingUsersInMeeting(props.meeting.id!);
             if (response.status < 300 && response.data !== undefined) {
                 const result: IGuest[] = [];
                 for (const meetingUser of response.data) {
-                    const user = (await usersService.get(meetingUser.userId)).data;
-                    if (user != null) {
-                        result.push({user: user, role: getRoleName(meetingUser.role), priority: 2})
+                    if (meetingUser.going) {
+                        const user = (await usersService.get(meetingUser.userId)).data;
+                        if (user != null) {
+                            result.push({user: user, role: getRoleName(meetingUser.role), priority: 2})
+                        }
                     }
                 }
                 setGuests(result);
@@ -44,7 +71,7 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
         }
         fetchData().catch(console.error);
 
-    }, [meetingUsersService, props.meeting.id, usersService])
+    }, [meetingUsersService, props.meeting.id, usersService, reloadData])
 
     function cardYearPreview() {
         if (endDate) {
@@ -65,8 +92,11 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
         <div className="h-fit w-screen relative">
             <div className="w-3/4 mx-auto relative">
                 <div className={"w flex flex-row-reverse mb-1"}>
-                    <div className={"flex justify-center items-center px-2 py-1 bg-white rounded-lg drop-shadow-md text-indigo-500 h-8 gap-1"}
-                    onClick={() => {navigate(`${props.meeting.id}/moneyTransfers`)}}>
+                    <div
+                        className={"flex justify-center items-center px-2 py-1 bg-white rounded-lg drop-shadow-md text-indigo-500 h-8 gap-1"}
+                        onClick={() => {
+                            navigate(`${props.meeting.id}/moneyTransfers`)
+                        }}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                              stroke="currentColor" className="aspect-square h-full">
                             <path strokeLinecap="round" strokeLinejoin="round"
@@ -75,9 +105,10 @@ export const MeetingCard = (props: { meeting: IMeeting }) => {
                         <span>Money transfers</span>
                     </div>
                 </div>
-                <Guests
-                    guests={guests}
-                    opened={false}/>
+                <Guests guests={guests} buttonSets={[
+                    {condition: (guests) => !inList(guests), buttons: [<BasicButton text={"Going"} action={() => changeGoing(true)} background={"colored"}/>]},
+                    {condition: inList, buttons: [<BasicButton text={"Not going"} action={() => changeGoing(false)} color={"red"} background={"gray"}/>]}
+                ]}/>
 
                 <div className="relative bg-indigo-400 shadow-lg rounded-lg shadow-xl p-5 overflow-hidden"
                      onClick={() => navigate(`${props.meeting.id}/events`)}>

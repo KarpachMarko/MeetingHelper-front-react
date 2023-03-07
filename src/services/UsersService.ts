@@ -2,11 +2,20 @@ import {BaseService} from "./base/BaseService";
 import {IUser} from "../domain/entity/IUser";
 import {IAppState} from "../state/IAppState";
 import httpClient from "../http-client";
+import {VerificationService} from "./VerificationService";
 
 export class UsersService extends BaseService<IUser> {
 
     constructor(appState: IAppState) {
         super("/users", appState);
+    }
+
+    public async getCurrentUserId(): Promise<string> {
+        const tgId = VerificationService.verify() ? window.Telegram.WebApp.initDataUnsafe.user?.id : "" ?? ""
+        const getRequest = () =>
+            httpClient.get(`${this.path}/userTgId/${tgId}`, this.getConfig());
+
+        return (await this.sendRequest<string>(getRequest)).data ?? "";
     }
 
     public async getUserPhotoUrl(userId: string): Promise<string | undefined> {
@@ -21,7 +30,7 @@ export class UsersService extends BaseService<IUser> {
         const getRequest = () =>
             httpClient.get(`https://api.telegram.org/bot${botToken}/getUserProfilePhotos?user_id=${userId}`, this.getConfig());
 
-        const data = (await this.sendRequest<{result: {total_count: number, photos: {file_id: string}[][]}}>(getRequest)).data;
+        const data = (await this.sendRequest<{ result: { total_count: number, photos: { file_id: string }[][] } }>(getRequest)).data;
         if (data === undefined) {
             return []
         }
@@ -33,7 +42,7 @@ export class UsersService extends BaseService<IUser> {
         const getRequest = () =>
             httpClient.get(`https://api.telegram.org/bot${botToken}/getFile?file_id=${fileId}`, this.getConfig());
 
-        const data = (await this.sendRequest<{result: {file_path: string}}>(getRequest))?.data;
+        const data = (await this.sendRequest<{ result: { file_path: string } }>(getRequest))?.data;
         if (data === undefined) {
             return undefined
         }

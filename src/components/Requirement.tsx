@@ -16,6 +16,9 @@ import {IGuest} from "../domain/model/IGuest";
 import {RequirementUsersService} from "../services/RequirementUsersService";
 import {UsersService} from "../services/UsersService";
 import {getRequirementRoleName} from "../enum/GuestStatus";
+import {VerificationService} from "../services/VerificationService";
+import {BasicButton} from "./BasicButton";
+import {inList} from "./GuestsList";
 
 export const Requirement = (props: { requirement: IRequirement }) => {
 
@@ -28,6 +31,7 @@ export const Requirement = (props: { requirement: IRequirement }) => {
     const usersService = useMemo(() => new UsersService(appState), [appState]);
 
     const [deleteDialog, setDeleteDialog] = useState(false);
+    const [reloadData, setReloadData] = useState(false);
 
     const [parameters, setParameters] = useState([] as IRequirementParameter[])
     const [payments, setPayments] = useState([] as IPayment[])
@@ -35,6 +39,7 @@ export const Requirement = (props: { requirement: IRequirement }) => {
 
     useEffect(() => {
         const fetchRequirements = async () => {
+            setReloadData(false)
             if (props.requirement.id == null) {
                 return;
             }
@@ -69,7 +74,7 @@ export const Requirement = (props: { requirement: IRequirement }) => {
         fetchPayments().catch(console.error)
         fetchGuests().catch(console.error)
 
-    }, [paymentsService, props.requirement.id, requirementParametersService, requirementUsersService, usersService]);
+    }, [paymentsService, props.requirement.id, requirementParametersService, requirementUsersService, usersService, reloadData]);
 
     function deleteEvent(eventId: string): void {
         requirementsService.delete(eventId).then(() =>
@@ -86,11 +91,50 @@ export const Requirement = (props: { requirement: IRequirement }) => {
         }
     }
 
+    async function join(): Promise<void> {
+        if (!VerificationService.verify()) {
+            return;
+        }
+        const userId = await usersService.getCurrentUserId();
+        if (props.requirement.id != null) {
+            requirementUsersService.add({userId: userId, requirementId: props.requirement.id, role: 1}).then(() => {
+                setReloadData(true);
+            })
+        }
+    }
+
+    async function leave(): Promise<void> {
+        if (!VerificationService.verify()) {
+            return;
+        }
+        const myTelegramId = window.Telegram.WebApp.initDataUnsafe.user?.id;
+        if (myTelegramId == null) {
+            return;
+        }
+        const currentUser = guests.find(guest => guest.user.telegramId === myTelegramId.toString());
+        if (currentUser?.user?.id != null) {
+            const requirementUsers = (await requirementUsersService.getAll()).data ?? [];
+            const reqUserId = requirementUsers.find(value => value.userId === currentUser.user.id && value.requirementId === props.requirement.id)?.id ?? ""
+            requirementUsersService.delete(reqUserId).then(() => {
+                setReloadData(true);
+            });
+        }
+    }
+
     return (
         <div className="h-full relative mt-10">
 
             <div className={"absolute -top-16 w-full"}>
-                <Guests guests={guests}/>
+                <Guests guests={guests} buttonSets={[
+                    {
+                        condition: (guests) => !inList(guests),
+                        buttons: [<BasicButton text={"Join"} action={join} background={"colored"}/>]
+                    },
+                    {
+                        condition: inList,
+                        buttons: [<BasicButton text={"Leave"} action={leave} color={"red"} background={"gray"}/>]
+                    }
+                ]}/>
             </div>
 
             <div className="max-w-xs mx-auto">

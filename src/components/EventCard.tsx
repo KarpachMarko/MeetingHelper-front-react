@@ -15,6 +15,9 @@ import {IRequirement} from "../domain/entity/IRequirement";
 import {RequirementsService} from "../services/RequirementsService";
 import {PaymentsService} from "../services/PaymentsService";
 import {getExpensePercent} from "../utils/FormatingUtil";
+import {VerificationService} from "../services/VerificationService";
+import {BasicButton} from "./BasicButton";
+import {inList} from "./GuestsList";
 
 export const EventCard = (props: {
     event: IEvent,
@@ -57,12 +60,44 @@ export const EventCard = (props: {
 
     const [isOpen, setIsOpen] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(false);
+    const [reloadData, setReloadData] = useState(false);
 
     const [guests, setGuests] = useState([] as IGuest[])
     const [requirements, setRequirements] = useState([] as IRequirement[])
     const [totalSpent, setTotalSpent] = useState(0)
 
+    async function join(): Promise<void> {
+        if (!VerificationService.verify()){
+            return;
+        }
+        const userId = await usersService.getCurrentUserId();
+        if (props.event.id != null) {
+            eventUsersService.add({userId: userId, eventId: props.event.id, status: 1}).then(() => {
+                setReloadData(true);
+            })
+        }
+    }
+
+    async function leave(): Promise<void> {
+        if (!VerificationService.verify()){
+            return;
+        }
+        const myTelegramId = window.Telegram.WebApp.initDataUnsafe.user?.id;
+        if (myTelegramId == null) {
+            return;
+        }
+        const currentUser = guests.find(guest => guest.user.telegramId === myTelegramId.toString());
+        if (currentUser?.user?.id != null) {
+            const eventUsers = (await eventUsersService.getAll()).data ?? [];
+            const eventUserId = eventUsers.find(value => value.userId === currentUser.user.id && value.eventId === props.event.id)?.id ?? ""
+            eventUsersService.delete(eventUserId).then(() => {
+                setReloadData(true);
+            });
+        }
+    }
+
     useEffect(() => {
+        setReloadData(false);
         const fetchGuests = async () => {
             const response = await eventUsersService.getEventUsersInEvent(props.event.id!);
             if (response.status < 300 && response.data !== undefined) {
@@ -92,7 +127,7 @@ export const EventCard = (props: {
         fetchRequirements().catch(console.error);
         fetchSpent().catch(console.error);
 
-    }, [eventUsersService, paymentsService, props, requirementsService, usersService])
+    }, [reloadData, eventUsersService, paymentsService, props, requirementsService, usersService])
 
     function deleteEvent(eventId: string): void {
         eventsService.delete(eventId).then(() =>
@@ -105,7 +140,10 @@ export const EventCard = (props: {
 
             {props.preview ? <></> :
             <div className={"absolute w-full -top-16"}>
-                <Guests guests={guests}/>
+                <Guests guests={guests} buttonSets={[
+                    {condition: (guests) => !inList(guests), buttons: [<BasicButton text={"Join"} action={join} background={"colored"}/>]},
+                    {condition: inList, buttons: [<BasicButton text={"Leave"} action={leave} color={"red"} background={"gray"}/>]}
+                ]}/>
             </div>
             }
 

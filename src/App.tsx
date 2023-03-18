@@ -11,6 +11,9 @@ import {Requirements} from "./views/Requirements/Requirements";
 import {CreateRequirement} from "./views/Requirements/CreateRequirement";
 import {EditRequirement} from "./views/Requirements/EditRequirement";
 import {MoneyTransfers} from "./views/Money transfers/MoneyTransfers";
+import {EditOption} from "./views/Options/EditOption";
+import {CreateOption} from "./views/Options/CreateOption";
+import {Options} from "./views/Options/Options";
 
 export const App = () => {
 
@@ -45,6 +48,9 @@ export const App = () => {
                     <Route path="/meetings/:meetingId/events/:eventId/requirements" element={<Requirements/>}/>
                     <Route path="/meetings/:meetingId/events/:eventId/requirements/new" element={<CreateRequirement/>}/>
                     <Route path="/meetings/:meetingId/events/:eventId/requirements/:requirementId" element={<EditRequirement/>}/>
+                    <Route path="/meetings/:meetingId/events/:eventId/requirements/:requirementId/options" element={<Options/>}/>
+                    <Route path="/meetings/:meetingId/events/:eventId/requirements/:requirementId/options/new" element={<CreateOption/>}/>
+                    <Route path="/meetings/:meetingId/events/:eventId/requirements/:requirementId/options/:optionId" element={<EditOption/>}/>
 
                     <Route path="/meetings/:meetingId/moneyTransfers" element={<MoneyTransfers/>}/>
                 </Routes>

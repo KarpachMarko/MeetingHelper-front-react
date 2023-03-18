@@ -182,10 +182,11 @@ export const Requirement = (props: { requirement: IRequirement }) => {
                         </div>
 
                         <div className={"flex justify-center gap-2"}>
-                            <div
-                                className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 rounded leading-5 transition duration-150 ease-in-out focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500 cursor-pointer">
-                                Show options
-                            </div>
+                            <BasicButton
+                                text={"Show options"}
+                                background={"none"}
+                                action={() => navigate(`${props.requirement.id}/options`)}
+                            />
                         </div>
 
                         <EditMenu items={[

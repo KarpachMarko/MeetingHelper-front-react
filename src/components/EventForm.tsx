@@ -8,6 +8,7 @@ import {IEvent} from "../domain/entity/IEvent";
 import {EventsService} from "../services/EventsService";
 import {EventSelector} from "./EventSelector";
 import {EventNavigationsService} from "../services/EventNavigationsService";
+import {Toggle} from "./Toggle";
 
 export const EventForm = (props: { event?: IEvent }) => {
 
@@ -27,7 +28,7 @@ export const EventForm = (props: { event?: IEvent }) => {
     const appState = useContext(AppContext);
     const navigate = useNavigate();
 
-    const formInit: IForm = {
+    const formInit: IForm = useMemo( () => {return {
         title: props.event?.title ?? "",
         description: props.event?.description ?? "",
         startDate: (props.event?.startDate ? moment(props.event?.startDate) : moment()).format("YYYY-MM-DDTHH:mm"),
@@ -36,7 +37,7 @@ export const EventForm = (props: { event?: IEvent }) => {
         locationTitle: props.event?.locationTitle ?? "",
         locationLink: props.event?.locationLink ?? "",
         previousEventsId: []
-    }
+    }}, [props])
 
     const eventNavigationsService = useMemo(() => new EventNavigationsService(appState), [appState]);
     const eventsService = useMemo(() => new EventsService(appState), [appState])
@@ -69,7 +70,7 @@ export const EventForm = (props: { event?: IEvent }) => {
         }
 
         fetchData().then(() => setForm(form)).catch(console.error)
-    }, [eventsService, meetingId, props])
+    }, [eventsService, formInit, meetingId, props])
 
     const fieldVariants = {
         opened: {scale: 1, opacity: 1},
@@ -240,14 +241,7 @@ export const EventForm = (props: { event?: IEvent }) => {
                         </div>
                     }
                     <div className={"flex flex-col items-end"}>
-                        <label className="relative block inline-flex items-center cursor-pointer mb-1.5">
-                            <input className="sr-only peer" type="checkbox" checked={useBudget}
-                                   onChange={event => setUseBudget(event.target.checked)}/>
-                            <div
-                                className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                            <span
-                                className="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300">Set budget</span>
-                        </label>
+                        <Toggle label={"Set budget"} isChecked={useBudget} toggleFunc={setUseBudget} />
                         <motion.label
                             animate={useBudget ? "opened" : "closed"} variants={fieldVariants}
                             className="w-full block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"

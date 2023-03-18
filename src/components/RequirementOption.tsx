@@ -1,94 +1,131 @@
-import React from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
+import {BasicButton} from "./BasicButton";
+import {useNavigate, useParams} from "react-router-dom";
+import {IRequirementOption} from "../domain/entity/IRequirementOption";
+import {EditMenu} from "./EditMenu";
+import {ConfirmDialog} from "./ConfirmDialog";
+import {ParameterInOptionService} from "../services/ParameterInOptionService";
+import {RequirementParametersService} from "../services/RequirementParametersService";
+import {AppContext} from "../state/AppContext";
+import {IRequirementParameter} from "../domain/entity/IRequirementParameter";
+import {PriorityIcon} from "./PriorityIcon";
+import {RequirementOptionsService} from "../services/RequirementOptionsService";
 
-export const RequirementOption = () => {
-	return (
-		<div className="block my-4 p-4 rounded-lg bg-white shadow-lg max-w-xs">
-			<img
+export const RequirementOption = (props: { option: IRequirementOption }) => {
+
+    const {meetingId, eventId, requirementId} = useParams();
+
+
+    const navigate = useNavigate();
+    const appState = useContext(AppContext);
+
+    const optionsService = useMemo(() => new RequirementOptionsService(appState), [appState]);
+    const parameterInOptionService = useMemo(() => new ParameterInOptionService(appState), [appState]);
+    const requirementParametersService = useMemo(() => new RequirementParametersService(appState), [appState]);
+
+    const [deleteDialog, setDeleteDialog] = useState(false);
+    const [parameters, setParameters] = useState([] as IRequirementParameter[]);
+    const canEdit = true;
+
+    useEffect(() => {
+        const fetchParameters = async () => {
+            if (props.option?.id == null) {
+                return
+            }
+            const response = await parameterInOptionService.getParameters(props.option?.id);
+            if (response.status < 300 && response.data !== undefined) {
+                const parametersId = response.data;
+                const parameters: IRequirementParameter[] = [];
+                for (const paramId of parametersId) {
+                    const paramResponse = await requirementParametersService.get(paramId);
+                    if (paramResponse.status < 300 && paramResponse.data !== undefined) {
+                        parameters.push(paramResponse.data);
+                    }
+                }
+                setParameters(parameters);
+            }
+        }
+        fetchParameters().catch(console.error);
+
+    }, [props, parameterInOptionService, requirementParametersService])
+
+    function deleteEvent(eventId: string): void {
+        optionsService.delete(eventId).then(() =>
+            navigate(0)
+        )
+    }
+
+    return (
+        <div
+            className={`block relative my-4 p-4 rounded-lg bg-white shadow-lg min-w-[150px] ${canEdit ? "pb-12" : ""}`}>
+            {/*<img
 				alt="123 Wallaby Avenue, Park Road"
 				src="https://images.unsplash.com/photo-1554995207-c18c203602cb"
 				className="object-cover w-full rounded-md"
-			/>
+			/>*/}
 
-			<div className="mt-2">
-				<dl>
-					<div>
-						<dt className="sr-only">
-							Price
-						</dt>
+            <div className="mt-2">
+                <div className="text-sm text-gray-500">
+                    $240,000
+                </div>
 
-						<dd className="text-sm text-gray-500">
-							$240,000
-						</dd>
-					</div>
+                <div className="font-medium">
+                    {props.option.title}
+                </div>
 
-					<div>
-						<dd className="font-medium">
-							Title
-						</dd>
-					</div>
+                <div className="font-light">
+                    {props.option.description}
+                </div>
 
-					<div>
-						<dd className="font-light">
-							Description Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet autem
-						</dd>
-					</div>
-				</dl>
+                <div className={"flex flex-wrap max-w-sm gap-2 mt-2 mb-4 text-xs"}>
+                    {parameters.map((param, index) => {
+                        return (
+                            <div key={index} className={"bg-indigo-100 rounded-md px-3 py-1"}>
+                                <div className={"flex gap-1 h-4 items-center text-md"}>
+                                    <PriorityIcon priority={param.priority}/>
+                                    {param.parameterDesc}
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
 
-				<dl className="flex flex-wrap gap-6 mt-6 text-xs">
-					<div className="sm:inline-flex sm:items-center sm:shrink-0">
-						<svg className="w-4 h-4 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
-						</svg>
+                <div className={"flex justify-end"}>
+                    {props.option.link != null && props.option.link.length > 0 ?
+                        <BasicButton
+                            text={"Link"}
+                            className={"flex-grow-0 px-5"}
+                            background={"gray"}
+                            action={() => navigate(props.option.link, {replace: false})}
+                        /> : <></>}
+                </div>
+            </div>
 
-						<div className="sm:ml-3 mt-1.5 sm:mt-0">
-							<dt className="text-gray-500">
-								Parking
-							</dt>
+            {canEdit ?
+                <EditMenu items={[
+                    {
+                        icon: "edit", action: () => {
+                            navigate(`/meetings/${meetingId}/events/${eventId}/requirements/${requirementId}/options/${props.option.id}`)
+                        }
+                    },
+                    {
+                        icon: "delete", action: () => {
+                            setDeleteDialog(true)
+                        }
+                    }
+                ]}/> : <></>}
 
-							<dd className="font-medium">
-								2 spaces
-							</dd>
-						</div>
-					</div>
-
-					<div className="sm:inline-flex sm:items-center sm:shrink-0">
-						<svg className="w-4 h-4 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-						</svg>
-
-						<div className="sm:ml-3 mt-1.5 sm:mt-0">
-							<dt className="text-gray-500">
-								Bathroom
-							</dt>
-
-							<dd className="font-medium">
-								2 rooms
-							</dd>
-						</div>
-					</div>
-
-					<div className="sm:inline-flex sm:items-center sm:shrink-0">
-						<svg className="w-4 h-4 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-						</svg>
-
-						<div className="sm:ml-3 mt-1.5 sm:mt-0">
-							<dt className="text-gray-500">
-								Bedroom
-							</dt>
-
-							<dd className="font-medium">
-								4 rooms
-							</dd>
-						</div>
-					</div>
-
-					<div className="flex justify-end w-full gap-2">
-						<a className="font-semibold text-sm inline-flex items-center justify-center px-3 py-1.5 border border-transparent rounded leading-5 shadow-sm transition duration-150 ease-in-out bg-indigo-50 focus:outline-none focus-visible:ring-2 hover:bg-indigo-100 text-indigo-500"
-						   href="#">Details</a>
-					</div>
-				</dl>
-			</div>
-		</div>
-	)
+            {deleteDialog ?
+                <ConfirmDialog title={"Delete requirement option"}
+                               text={"Do you really want to delete this requirement option?"}
+                               acceptText={"Delete"}
+                               cancelText={"Cancel"}
+                               color={"red"}
+                               acceptAction={async () => {
+                                   await deleteEvent(props.option.id!)
+                               }}
+                               cancelAction={() => setDeleteDialog(false)}/>
+                : <></>}
+        </div>
+    )
 }

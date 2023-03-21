@@ -81,7 +81,7 @@ export const OptionForm = (props: { option?: IRequirementOption }) => {
             requirementOptionsService.add(option).then(res => {
                 const optionId = res.data?.id!;
                 parameterInOptionService.setParameters(optionId, selectedParameters.map(paramId => {
-                    return {requirementOptionId: option.id!, requirementParameterId: paramId}
+                    return {requirementOptionId: optionId, requirementParameterId: paramId}
                 })).then(() => {
                     navigate(`/meetings/${meetingId}/events/${eventId}/requirements/${requirementId}/options`)
                 })
@@ -119,6 +119,21 @@ export const OptionForm = (props: { option?: IRequirementOption }) => {
                         onChange={event => setForm({...form, description: event.target.value})}
                         rows={6}
                     />
+
+                    <label
+                        className="w-full block overflow-hidden rounded-md border border-gray-200 px-3 py-2 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600">
+                        <span className="text-xs font-medium text-gray-500">Price</span>
+
+                        <input
+                            type="number"
+                            min={0}
+                            step={1}
+                            value={form.price}
+                            onChange={event => setForm({...form, price: +event.target.value})}
+                            name="eventBudgetPerPerson"
+                            className="mt-1 text-sm w-full text-gray-800 border-none p-0 focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+                        />
+                    </label>
 
                     <label className="block text-sm font-medium text-gray-700">
                         Parameters

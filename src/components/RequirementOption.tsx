@@ -10,6 +10,7 @@ import {AppContext} from "../state/AppContext";
 import {IRequirementParameter} from "../domain/entity/IRequirementParameter";
 import {PriorityIcon} from "./PriorityIcon";
 import {RequirementOptionsService} from "../services/RequirementOptionsService";
+import {AnimatePresence, motion} from "framer-motion";
 
 export const RequirementOption = (props: { option: IRequirementOption }) => {
 
@@ -66,7 +67,7 @@ export const RequirementOption = (props: { option: IRequirementOption }) => {
 
             <div className="mt-2">
                 <div className="text-sm text-gray-500">
-                    $240,000
+                    ${props.option.price}
                 </div>
 
                 <div className="font-medium">
@@ -77,18 +78,23 @@ export const RequirementOption = (props: { option: IRequirementOption }) => {
                     {props.option.description}
                 </div>
 
-                <div className={"flex flex-wrap max-w-sm gap-2 mt-2 mb-4 text-xs"}>
-                    {parameters.map((param, index) => {
-                        return (
-                            <div key={index} className={"bg-indigo-100 rounded-md px-3 py-1"}>
-                                <div className={"flex gap-1 h-4 items-center text-md"}>
-                                    <PriorityIcon priority={param.priority}/>
-                                    {param.parameterDesc}
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
+                <AnimatePresence>
+                    <motion.div className={"flex flex-wrap max-w-sm gap-2 mt-2 mb-4 text-xs"}>
+                        {parameters.map((param, index) => {
+                            return (
+                                <motion.div
+                                    initial={{scale: 0.8, opacity: 0}}
+                                    animate={{scale: 1, opacity: 1}}
+                                    key={index} className={"bg-indigo-100 rounded-md px-3 py-1"}>
+                                    <div className={"flex gap-1 h-4 items-center text-md"}>
+                                        <PriorityIcon priority={param.priority}/>
+                                        {param.parameterDesc}
+                                    </div>
+                                </motion.div>
+                            )
+                        })}
+                    </motion.div>
+                </AnimatePresence>
 
                 <div className={"flex justify-end"}>
                     {props.option.link != null && props.option.link.length > 0 ?

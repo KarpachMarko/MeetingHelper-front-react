@@ -19,6 +19,7 @@ import {getRequirementRoleName} from "../enum/GuestStatus";
 import {VerificationService} from "../services/VerificationService";
 import {BasicButton} from "./BasicButton";
 import {inList} from "./GuestsList";
+import {AnimatePresence, motion} from "framer-motion";
 
 export const Requirement = (props: { requirement: IRequirement }) => {
 
@@ -163,15 +164,20 @@ export const Requirement = (props: { requirement: IRequirement }) => {
                         <div
                             className="w-full text-gray-900 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <span className="font-light">Parameters:</span>
-                            {parameters.sort((a, b) => b.priority - a.priority).map((value, index) => (
-                                <div key={index}
-                                     className={`inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 ${index % 2 === 0 ? "bg-indigo-100" : "bg-indigo-50"} hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white gap-2`}>
-                                    <div className={"h-full w-4"}>
-                                        <PriorityIcon priority={value.priority}/>
-                                    </div>
-                                    {value.parameterDesc}
-                                </div>
-                            ))}
+                            <AnimatePresence>
+                                {parameters.sort((a, b) => b.priority - a.priority).map((value, index) => (
+                                    <motion.div
+                                        key={index}
+                                        initial={{scale: 0.8, opacity: 0}}
+                                        animate={{scale: 1, opacity: 1}}
+                                        className={`inline-flex relative items-center py-2 px-4 w-full text-sm font-medium border-b border-gray-200 ${index % 2 === 0 ? "bg-indigo-100" : "bg-indigo-50"} hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white gap-2`}>
+                                        <div className={"h-full w-4"}>
+                                            <PriorityIcon priority={value.priority}/>
+                                        </div>
+                                        {value.parameterDesc}
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
                         </div>
 
                         <hr className="mb-3"/>
